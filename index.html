@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="ta">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serndhu Padippom — Study Together</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#F4F1EA">
+<meta name="description" content="Serndhu Padippom — shared study timer for friends.">
+<meta name="application-name" content="Serndhu Padippom">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Serndhu Padippom">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem("stt_theme"));if(t!=="dark"&&t!=="light")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#151918":"#F4F1EA";}catch(e){}})();</script>
+<style>
+/* Serndhu Padippom — calm, flat, study-friendly theme */
+:root{color-scheme:light;
+  --bg:#F4F1EA;--card:#FCFAF5;--soft:#ECE8DD;--line:#D8D3C5;--track:#D8D3C5;
+  --text:#26302B;--muted:#5C665F;
+  --accent:#2E6B5A;--onAccent:#FFFFFF;--accentSoft:#DDEBE3;--accentText:#1F5244;
+  --focus:#2E6B5A;--break:#9A5A12;--done:#6A5698;--wait:#3F6E96;
+  --warn:#F3E6C4;--danger:#B3402F}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#151918;--card:#1E2422;--soft:#28302D;--line:#38423E;--track:#3A4541;
+  --text:#F0ECE2;--muted:#AAB3AC;
+  --accent:#86C9AC;--onAccent:#10231B;--accentSoft:#24332D;--accentText:#A9DEC6;
+  --focus:#86C9AC;--break:#E6B76A;--done:#BBA8E6;--wait:#8DB9E0;
+  --warn:#3D3520;--danger:#FF9F90}
+
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans Tamil",sans-serif;line-height:1.55}
+body{padding:0 20px 56px}
+button,input,select{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}
+
+/* header */
+header{max-width:1120px;margin:auto;padding:20px 0;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:12px;font-size:19px;font-weight:800;letter-spacing:-.4px}
+.brand:before{content:'📚';display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--accentSoft);border:1px solid var(--line);font-size:22px}
+.brand .brand-mark{display:none}
+.brand-name{display:flex;flex-direction:column}
+.brand-tagline{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0}
+main{max-width:1120px;margin:auto}
+
+/* buttons */
+.btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:11px 15px;font-weight:700;font-size:13px;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--soft);border-color:var(--muted)}
+.btn.primary{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:18px;padding:16px;font-size:15px;border:0;border-radius:14px;background:var(--accent);color:var(--onAccent)}
+.btn.primary:hover{background:var(--accent);filter:brightness(1.08)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* hero */
+.welcome{margin-top:12px;padding:38px 42px 36px;border-radius:26px;background:var(--accentSoft);border:1px solid var(--line)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accentText);font-size:10px;font-weight:850;letter-spacing:1.5px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+h1{max-width:720px;margin:20px 0 14px;font-size:clamp(38px,5.5vw,62px);line-height:1.05;letter-spacing:-2.4px;font-weight:820;color:var(--text)}
+h1 span{color:var(--accentText)}
+.welcome-copy{max-width:610px;margin:0;color:var(--muted);font-size:15px;line-height:1.75}
+
+/* motivational quote */
+.quote{display:flex;align-items:flex-start;gap:14px;margin-top:24px;padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);max-width:640px}
+.quote-mark{flex:0 0 auto;font-size:26px;line-height:1;color:var(--accent)}
+.quote-body{flex:1;min-width:0}
+.quote-kicker{font-size:10px;font-weight:850;letter-spacing:1.4px;color:var(--muted)}
+.quote-text{margin:4px 0 0;font-size:16px;font-weight:650;line-height:1.55;color:var(--text)}
+.quote-next{flex:0 0 auto;align-self:center;border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700}
+.quote-next:hover{border-color:var(--muted)}
+.quote.slim{margin:16px auto 0;max-width:780px}
+
+/* layout + cards */
+.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:22px;align-items:start;margin-top:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:27px;margin-bottom:18px}
+.card h2{font-size:19px;letter-spacing:-.4px;margin:0 0 4px}
+.card-intro{max-width:520px;margin:0 0 20px;color:var(--muted);font-size:13px;line-height:1.7}
+.setup-card{position:relative}
+.setup-card:before{content:'YOUR SESSION';position:absolute;right:24px;top:27px;font-size:9px;font-weight:900;letter-spacing:1.5px;color:var(--muted)}
+
+/* form */
+label,.label{display:block;margin:18px 0 7px;font-size:12px;font-weight:800;color:var(--text)}
+input,select{width:100%;min-width:0;padding:13px 14px;font-size:14px;color:var(--text);background:var(--soft);border:1px solid var(--line);border-radius:13px}
+input:hover,select:hover{border-color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:0}
+.seg{display:flex;gap:4px;padding:5px;background:var(--soft);border:1px solid var(--line);border-radius:15px}
+.seg button{flex:1;padding:11px 9px;border:0;border-radius:11px;background:transparent;color:var(--muted);font-size:13px;font-weight:700}
+.seg button.on{background:var(--card);color:var(--accentText);box-shadow:inset 0 0 0 1px var(--line)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--text);font-size:12px;font-weight:700;transition:background .15s,border-color .15s}
+.chip:hover,.chip:focus{background:var(--accentSoft);border-color:var(--accent)}
+.summary{margin-top:16px;padding:14px;border-radius:14px;background:var(--soft);border:1px solid var(--line);font-size:13px;line-height:1.6;color:var(--text)}
+.err{min-height:15px;margin-top:8px;font-size:12px;color:var(--danger)}
+.hint,.privacy-note{margin-top:12px;font-size:12px;line-height:1.6;color:var(--muted)}
+.privacy-note{text-align:center}
+
+/* side card */
+.side-card{background:var(--accentSoft)}
+.side-icon{display:grid;place-items:center;width:52px;height:52px;margin-bottom:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:24px}
+.side-card h3{margin:0 0 8px;font-size:20px;letter-spacing:-.4px}
+.side-card p{margin:0;font-size:13px;line-height:1.7;color:var(--muted)}
+.feature{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:11px 10px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-size:12px}
+.feature b{display:block;font-size:12px}
+.feature small{display:block;margin-top:2px;font-size:11px;line-height:1.55;color:var(--muted)}
+.feature-icon{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:var(--accentSoft);font-size:15px}
+
+/* join + recent */
+.join-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.join-heading h2{margin:0 0 3px}.join-heading p{margin:0;font-size:12px;color:var(--muted)}
+.join-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:var(--accentSoft);color:var(--accentText);font-size:20px}
+.linkbox{display:flex;gap:8px}.linkbox input{flex:1;min-width:0}
+.recent{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line);font-size:13px}
+.recent small{display:block;color:var(--muted)}
+.banner,.soundwarn{margin:14px 0;padding:10px 14px;border-radius:12px;background:var(--warn);border:1px solid var(--line);color:var(--text);font-size:12px}
+
+/* timer */
+.stage{text-align:center;padding:34px 24px 30px}
+.sname{margin-bottom:10px;font-size:15px;font-weight:650;color:var(--muted);word-break:break-word}
+.ringwrap{position:relative;width:min(72vw,330px);aspect-ratio:1;margin:14px auto}
+.ringwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ringbg{fill:none;stroke:var(--track);stroke-width:13}
+.ringfg{fill:none;stroke:var(--accent);stroke-width:13;stroke-linecap:round;transition:stroke-dashoffset .3s linear,stroke .3s}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#big{font-size:clamp(46px,11vw,70px);font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-2px;color:var(--text)}
+#label{margin-top:6px;font-size:14px;font-weight:800;color:var(--text)}
+#sub{max-width:520px;margin:16px auto 0;font-size:13px;line-height:1.7;color:var(--muted)}
+.bar{height:8px;max-width:420px;margin:18px auto 0;border-radius:99px;background:var(--track);overflow:hidden}
+.bar i{display:block;width:0;height:100%;border-radius:99px;background:var(--accent);transition:width .3s linear,background .3s}
+.tools{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:20px}
+#timerView[data-state="focus"] .ringfg,#timerView[data-state="focus"] .bar i{stroke:var(--focus);background:var(--focus)}
+#timerView[data-state="break"] .ringfg,#timerView[data-state="break"] .bar i{stroke:var(--break);background:var(--break)}
+#timerView[data-state="wait"] .ringfg,#timerView[data-state="wait"] .bar i{stroke:var(--wait);background:var(--wait)}
+#timerView[data-state="done"] .ringfg,#timerView[data-state="done"] .bar i{stroke:var(--done);background:var(--done)}
+#stopBtn{font-weight:800;background:var(--warn);color:var(--text);border-color:var(--line)}
+#stopBtn:hover{background:var(--warn);border-color:var(--muted)}
+.invite{max-width:780px;margin:16px auto}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 16px;border-radius:99px;background:var(--text);color:var(--bg);font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9}
+.toast.show{opacity:1}
+
+/* full screen + floating desktop window */
+body.fs header,body.fs .invite,body.fs .tools .nofs{display:none}
+body.fs{padding:0 10px 20px}
+body.foclyra-floating{padding:10px;background:var(--bg)}
+body.foclyra-floating header,body.foclyra-floating #createView,body.foclyra-floating .invite,body.foclyra-floating #fileWarn,body.foclyra-floating .quote{display:none!important}
+body.foclyra-floating main{max-width:none}
+body.foclyra-floating .stage{padding:8px}
+body.foclyra-floating .ringwrap{width:112px}
+body.foclyra-floating #big{font-size:34px}
+body.foclyra-floating #miniBtn,body.foclyra-floating #fsBtn,body.foclyra-floating #soundBtn,body.foclyra-floating #alertBtn,body.foclyra-floating #newBtn{display:none!important}
+
+
+/* quote inside the timer card */
+.stage .quote.slim{margin:18px auto 0;max-width:560px;text-align:left}
+/* CA formulas (start page, side) */
+.chip.on{background:var(--accentSoft);border-color:var(--accent);color:var(--accentText)}
+.fkicker{font-size:11px;font-weight:850;letter-spacing:1.4px;color:var(--accentText)}
+.fcard h2{margin:8px 0 4px}
+.fcard select,.fcard input{margin-top:10px;padding:11px 12px;font-size:13px}
+.fnote{margin-top:10px;padding:9px 11px;border-radius:12px;background:var(--warn);border:1px solid var(--line);font-size:11px;line-height:1.6}
+#fList{max-height:560px;overflow:auto;margin-top:10px;padding-right:2px}
+#fList details{border:1px solid var(--line);border-radius:12px;background:var(--soft);margin-top:8px}
+#fList summary{padding:10px 12px;font-size:13px;font-weight:750;cursor:pointer}
+#fList .fsub{margin:12px 2px 0;font-size:10px;font-weight:850;letter-spacing:1.2px;color:var(--muted)}
+.fbody{white-space:pre-line;padding:2px 12px 12px;font-size:13px;line-height:1.75;overflow-wrap:anywhere}
+.fempty{padding:14px 4px;font-size:12px;color:var(--muted)}
+
+@media(max-width:760px){
+  body{padding:0 14px 40px}
+  header{padding:14px 0}
+  .brand{font-size:16px}.brand:before{width:38px;height:38px}.brand-tagline{font-size:9px}
+  .welcome{margin-top:8px;padding:26px 20px 24px;border-radius:20px}
+  h1{font-size:clamp(34px,10vw,46px);letter-spacing:-1.7px}
+  .welcome-copy{font-size:14px}
+  #fList{max-height:none}
+  .quote{padding:14px;flex-wrap:wrap}.quote-body{flex:1 1 calc(100% - 44px)}.quote-next{margin-left:40px;align-self:flex-start}.quote-text{font-size:15px}
+  .layout{grid-template-columns:1fr;gap:0}
+  .card{padding:20px;border-radius:20px}
+  .setup-card:before{display:none}
+  .stage{padding:24px 14px}
+  .ringwrap{width:min(76vw,285px)}
+  .linkbox{flex-wrap:wrap}.linkbox input{flex-basis:100%}.linkbox button{width:100%}
+  .tools .btn{font-size:12px;padding:9px 11px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand" aria-label="Serndhu Padippom home">
+    <svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="Serndhu Padippom logo" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="44" fill="none" stroke="#a99aff" stroke-width="4.5"/>
+      <path d="M25 57 C27 38 39 27 52 29 C67 30 76 41 73 54 C70 67 57 74 45 68 C36 63 37 51 44 46 C50 42 57 44 61 49" fill="none" stroke="currentColor" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="27" r="7" fill="#a99aff"/>
+    </svg>
+    <span class="brand-name"><span>Serndhu Padippom</span><small class="brand-tagline">Serndhu focus pannalaam. Serndhu jeyippom!</small></span>
+  </div>
+  <button class="btn small" id="themeBtn" title="Theme maathunga">◐ Theme</button>
+</header>
+
+<main>
+  <div id="fileWarn" class="banner hidden">
+    Neenga file-a direct open pannirukkeenga. Share link friends-kku work aaganumna website-a online-la host pannanum.
+  </div>
+
+  <!-- CREATE VIEW -->
+  <section id="createView">
+    <section class="welcome" aria-labelledby="welcomeTitle">
+      <div class="eyebrow"><span class="live-dot"></span> YOUR SHARED FOCUS SPACE</div>
+      <h1 id="welcomeTitle">Serndhu padippom.<br><span>Goal-ah mudippom!</span></h1>
+      <p class="welcome-copy">Friends-oda ore countdown-la focus pannunga. Distraction-ku konjam leave kuduppom! 😎</p>
+      <div class="quote" id="quoteHero">
+        <span class="quote-mark" aria-hidden="true">✦</span>
+        <div class="quote-body"><div class="quote-kicker">INNAIKKU ORU REMINDER</div><p class="quote-text"></p></div>
+        <button class="quote-next" type="button">Adutha quote ↻</button>
+      </div>
+    </section>
+    <div class="layout">
+      <div>
+        <div class="card setup-card" id="timerSetupAnchor">
+          <h2>Study session create pannunga</h2>
+          <p class="card-intro">Timer set pannunga, link share pannunga, ellarum serndhu focus pannalaam.</p>
+          <label for="name">Session name</label>
+          <input id="name" maxlength="60" placeholder="Ex: Maths revision - Day 1 📚">
+          <label>Timer type</label>
+          <div class="seg" id="modeSeg"><button data-mode="count" class="on">One Countdown</button><button data-mode="pomo">Focus + Break</button></div>
+          <div id="countFields">
+            <div class="row"><div><label for="h">Hours</label><input id="h" type="number" min="0" max="12" value="1"></div><div><label for="m">Minutes</label><input id="m" type="number" min="0" max="59" value="0"></div></div>
+            <div class="chips" id="countChips"><button class="chip" data-h="1" data-m="0">1 hour</button><button class="chip" data-h="1" data-m="30">1 hour 30 min</button><button class="chip" data-h="2" data-m="0">2 hours</button><button class="chip" data-h="3" data-m="0">3 hours</button></div>
+          </div>
+          <div id="pomoFields" class="hidden">
+            <div class="row"><div><label for="f">Focus time (min)</label><input id="f" type="number" min="1" max="240" value="50"></div><div><label for="b">Break time (min)</label><input id="b" type="number" min="1" max="60" value="10"></div><div><label for="c">Rounds</label><input id="c" type="number" min="1" max="20" value="3"></div></div>
+            <div class="chips" id="pomoChips"><button class="chip" data-f="25" data-b="5" data-c="4">25 / 5 × 4</button><button class="chip" data-f="50" data-b="10" data-c="3">50 / 10 × 3</button><button class="chip" data-f="90" data-b="15" data-c="2">90 / 15 × 2</button></div>
+          </div>
+          <label for="startIn">Start timer</label>
+          <select id="startIn"><option value="0">Start now</option><option value="5">In 5 minutes</option><option value="10">In 10 minutes</option></select>
+          <div class="summary" id="summary"></div><div class="err" id="err"></div>
+          <button class="btn primary" id="createBtn">Create a Permanent Session Link <span aria-hidden="true">→</span></button>
+          <p class="privacy-note">One session · One permanent link · Share with your study buddies.</p>
+        </div>
+        <div class="card join-card" id="joinCard">
+          <div class="join-heading"><span class="join-icon" aria-hidden="true">↗</span><div><h2>Already have a room link?</h2><p>Friend share panna session link-a paste pannunga.</p></div></div>
+          <div class="linkbox"><input id="joinInput" placeholder="Paste session link or code"><button class="btn" id="joinBtn">Join session</button></div><div class="err" id="joinErr"></div>
+        </div>
+        <div class="card hidden" id="recentCard"><h2>Recent sessions</h2><div id="recentList"></div></div>
+      </div>
+      <aside>
+        <div class="card fcard" id="formulaCard">
+          <span class="fkicker">📐 CA FORMULAS &amp; SHORTCUTS</span>
+          <h2>Quick formulas</h2>
+          <div class="chips" id="fLevels"></div>
+          <select id="fSub" aria-label="Paper select pannunga"></select>
+          <input id="fSearch" type="search" placeholder="Search: EOQ, HRA, NPV, GST..." aria-label="Formula search">
+          <div class="fnote" id="fNote"></div>
+          <div id="fList"></div>
+          <div class="hint">Exam-ku munnadi latest ICAI Study Material / RTP / MTP / Study Guidelines-la confirm pannunga. Last checked: 25 Oct 2026.</div>
+        </div>
+        <div class="card side-card">
+          <div class="side-icon">👯</div><h3>Friends-oda focus pannunga</h3><p>Google Meet-la irundhe indha link-a share pannunga. Friends same session countdown-a open pannalaam.</p>
+          <div class="feature"><span class="feature-icon">⏱️</span><div><b>One shared countdown</b><small>Ellarukkum same session end time.</small></div></div>
+          <div class="feature"><span class="feature-icon">🔗</span><div><b>Permanent session link</b><small>Indha session mudiyura varaikkum same link use pannunga.</small></div></div>
+          <div class="feature"><span class="feature-icon">☕</span><div><b>Pause for me</b><small>Un timer mattum pause; friends timer continue aagum.</small></div></div>
+          <div class="feature"><span class="feature-icon">🚀</span><div><b>Small steps. Big goals.</b><small>Konjam focus pannunga. Progress build aagum!</small></div></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- TIMER VIEW -->
+  <section id="timerView" class="hidden" data-state="wait">
+    <div id="soundWarn" class="soundwarn hidden">Sound enable panna page-la oru thadava tap pannunga.</div>
+    <div class="card stage">
+      <div class="sname" id="sname"></div>
+      <div class="ringwrap">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="ringbg" cx="100" cy="100" r="90"></circle>
+          <circle class="ringfg" id="ring" cx="100" cy="100" r="90" stroke-dasharray="565.49" stroke-dashoffset="565.49"></circle>
+        </svg>
+        <div class="center">
+          <div id="big" aria-live="off">00:00</div>
+          <div id="label"></div>
+        </div>
+      </div>
+      <div id="sub"></div>
+      <div class="quote slim" id="quoteTimer">
+      <span class="quote-mark" aria-hidden="true">✦</span>
+      <div class="quote-body"><div class="quote-kicker">KEEP GOING</div><p class="quote-text"></p></div>
+      <button class="quote-next" type="button">Adutha quote ↻</button>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+      <div class="tools">
+        <button class="btn small" id="miniBtn" title="Small timer window">Mini timer</button>
+        <button class="btn small" id="fsBtn">Full screen</button>
+        <button class="btn small" id="soundBtn">Sound: on</button>
+        <button class="btn small" id="alertBtn">Alerts: off</button>
+        <button class="btn small" id="stopBtn" title="Pauses the countdown only for you. Other participants continue running.">Pause for me</button>
+        <button class="btn small nofs" id="newBtn">Pudhu timer</button>
+      </div>
+    </div>
+
+    <div class="card invite" id="invitePanel">
+      <h2>Friends-a invite pannunga 👯</h2>
+      <div class="linkbox">
+        <input id="linkOut" readonly>
+        <button class="btn" id="copyLink">Link copy</button>
+      </div>
+      <div class="tools" style="justify-content:flex-start">
+        <button class="btn small" id="copyMsg">Invite message copy</button>
+        <button class="btn small" id="copyCode">Code mattum copy</button>
+        <button class="btn small" id="testSound">Sound test</button>
+      </div>
+      <div class="hint">Share this permanent link in Google Meet chat or WhatsApp. The same link stays valid for this session until its timer finishes. <b>Pause for me</b> pauses only your own timer view; everyone else continues.</div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="formulas.js"></script>
+<script>
+//#region core
+function compute(cfg, tMs){
+  var f=cfg.f*60, b=cfg.b*60, c=cfg.c;
+  var total=c*f+(c-1)*b, cyc=f+b;
+  var e=(tMs-cfg.s*1000)/1000;
+  if(e<0) return {st:'wait',toStart:-e,total:total,key:'wait'};
+  if(e>=total) return {st:'done',total:total,focused:c*f,key:'done'};
+  var k=Math.floor(e/cyc), r=e-k*cyc, inFocus=r<f;
+  var pStart=k*cyc+(inFocus?0:f);
+  var pEnd=inFocus?k*cyc+f:(k+1)*cyc;
+  return {st:inFocus?'focus':'break',idx:k+1,phaseLen:pEnd-pStart,phaseRem:pEnd-e,
+          total:total,rem:total-e,el:e,focused:k*f+Math.min(r,f),key:(inFocus?'f':'b')+(k+1)};
+}
+function encodeCfg(cfg){
+  if(cfg.daily) return 'd'+(cfg.tz+1000)+'.'+cfg.startMin+'.'+cfg.f+'.'+cfg.b+'.'+cfg.c;
+  return Math.floor(cfg.s).toString(36)+'.'+cfg.f+'.'+cfg.b+'.'+cfg.c;
+}
+function effective(cfg,tMs){
+  if(!cfg.daily) return cfg;
+  var DAY=86400000, z=cfg.tz*60000;
+  var day=Math.floor((tMs+z)/DAY);
+  var st=day*DAY+cfg.startMin*60000-z;
+  if(st>tMs) st-=DAY;
+  var total=(cfg.c*cfg.f*60+(cfg.c-1)*cfg.b*60)*1000, s, next=false;
+  if(tMs<st+total+600000) s=st;      // running, or just finished (kept on screen for 10 min)
+  else { s=st+DAY; next=true; }
+  return {s:Math.floor(s/1000),f:cfg.f,b:cfg.b,c:cfg.c,daily:true,next:next};
+}
+function decodeCfg(code){
+  code=(code||'').trim();
+  var d=/^d(\d+)\.(\d+)\.(\d+)\.(\d+)\.(\d+)$/.exec(code);
+  if(d){
+    var q={daily:true,tz:+d[1]-1000,startMin:+d[2],f:+d[3],b:+d[4],c:+d[5]};
+    if(!(q.tz>=-840&&q.tz<=840&&q.startMin>=0&&q.startMin<1440&&q.f>=1&&q.f<=720&&q.b>=0&&q.b<=120&&q.c>=1&&q.c<=20)) return null;
+    if(q.c===1) q.b=0;
+    return q;
+  }
+  var m=/^([0-9a-z]+)\.(\d+)\.(\d+)\.(\d+)$/i.exec((code||'').trim());
+  if(!m) return null;
+  var cfg={s:parseInt(m[1],36),f:+m[2],b:+m[3],c:+m[4]};
+  if(!(cfg.s>1e9&&cfg.s<4e9)) return null;
+  if(!(cfg.f>=1&&cfg.f<=720&&cfg.b>=0&&cfg.b<=120&&cfg.c>=1&&cfg.c<=20)) return null;
+  if(cfg.c===1) cfg.b=0;
+  return cfg;
+}
+function fmt(sec){
+  sec=Math.max(0,Math.ceil(sec-1e-9));
+  var h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60;
+  var p=function(n){return String(n).padStart(2,'0')};
+  return h>0 ? h+':'+p(m)+':'+p(s) : p(m)+':'+p(s);
+}
+function fmtDur(sec){
+  var mins=Math.round(sec/60), h=Math.floor(mins/60), m=mins%60;
+  if(h===0) return m+' min';
+  return h+' h'+(m?' '+String(m).padStart(2,'0')+' min':'');
+}
+function totalSec(cfg){ return cfg.c*cfg.f*60+(cfg.c-1)*cfg.b*60; }
+//#endregion core
+
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var desktopBridge=window.foclyraDesktop||null;
+  var isFloatingWindow=!!(desktopBridge&&desktopBridge.isFloating);
+  if(isFloatingWindow) document.body.classList.add('foclyra-floating');
+  var eff=null, alertsOn=false, soloMode=true;
+  var offset=0, cfg=null, lastKey=null, soundOn=true, actx=null, mini=null, wake=null, mode='count';
+  var tick=null;
+  var now=function(){return Date.now()+offset};
+  var clock=function(ms){return new Date(ms).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})};
+
+  /* ---------- helpers ---------- */
+  function toast(msg){
+    var t=$('toast'); t.textContent=msg; t.classList.add('show');
+    clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove('show')},2200);
+  }
+  function copy(text){
+    var done=function(){toast('Link copy aayiduchu! 📋')};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){fallback()});
+    } else fallback();
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      try{document.execCommand('copy'); done();}catch(e){toast('Link select panni copy pannunga')}
+      document.body.removeChild(ta);
+    }
+  }
+  function store(key,val){ try{ if(val===undefined) return JSON.parse(localStorage.getItem(key)); localStorage.setItem(key,JSON.stringify(val)); }catch(e){ return null; } }
+
+  /* ---------- theme ---------- */
+  function applyTheme(t){
+    document.documentElement.dataset.theme=t;
+    var m=document.querySelector('meta[name=theme-color]'); if(m) m.content=t==='dark'?'#151918':'#F4F1EA';
+  }
+  $('themeBtn').textContent='◐ Theme';
+  $('themeBtn').onclick=function(){
+    var cur=document.documentElement.dataset.theme||'light';
+    var nx=cur==='dark'?'light':'dark';
+    applyTheme(nx); store('stt_theme',nx);
+  };
+
+  /* ---------- motivational quotes (consistency > intensity) ---------- */
+  var QUOTES=[
+    'Daily konjam konjam — adhu dhaan periya vetri.',
+    'Motivation vandhu povum. Habit dhaan nammala kootti pogum.',
+    'Perfect-ah irukka vendaam. Regular-ah irundha podhum.',
+    'Consistency sathham podaadhu. Result dhaan sathama pesum.',
+    'Innaikku 1 hour. Naalaikku 1 hour. Oru maasathula difference theriyum.',
+    'Timer-a start pannunga. Mudivu pathi apram yosikkalaam.',
+    'Mood illanaalum, plan irukku. Adha follow pannunga.',
+    'Innaikku miss aanaa, naalaikku thirumba start. Nillaama thirumba vaanga.',
+    'Kadaisi vara paakkaadheenga. Adutha 25 minutes mattum paarunga.',
+    'Oru pomodoro mudinjaa, goal-ku oru padi nerungiyaachu.',
+    'Phone-a oru ora vechuttu, pen-a eduthukonga. Adhu dhaan first win.',
+    'Ellaa goal-um oru naal-la mudiyaadhu; ellaa naalum konjam pannaa mudiyum.',
+    'Innaikku oru page — adhu dhaan naalaikku motivation.',
+    'Neenga thaniya illa. Ungaloda friends-um ungakooda padikkiraanga.',
+    'Break eduthaa thappu illa. Break mudinjaa thirumba vandhuttaa dhaan strong.',
+    'Chinna chinna steps-um, nitham nadandhaa, thooram kuraiyum.'
+  ];
+  var qi=Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000)%QUOTES.length;
+  function showQuote(){ document.querySelectorAll('.quote-text').forEach(function(el){ el.textContent='\u201C'+QUOTES[qi]+'\u201D'; }); }
+  document.querySelectorAll('.quote-next').forEach(function(b){ b.onclick=function(){ qi=(qi+1)%QUOTES.length; showQuote(); }; });
+  showQuote();
+
+  /* ---------- CA formulas (start page) ---------- */
+  var FM=window.CA_FORMULAS||[], fLv=null, fSb=0;
+  function fFind(id){ for(var i=0;i<FM.length;i++) if(FM[i].id===id) return FM[i]; return FM[0]; }
+  function fItem(it){
+    var d=document.createElement('details'), sm=document.createElement('summary'), bd=document.createElement('div');
+    sm.textContent=it[0]; bd.className='fbody'; bd.textContent=it[1]; d.appendChild(sm); d.appendChild(bd); return d;
+  }
+  function fRender(){
+    var L=fFind(fLv), box=$('fList'), q=$('fSearch').value.trim().toLowerCase(), n=0;
+    box.textContent='';
+    document.querySelectorAll('#fLevels .chip').forEach(function(c){ c.classList.toggle('on',c.dataset.l===L.id); });
+    $('fNote').textContent=L.note; $('fSub').classList.toggle('hidden',!!q);
+    if(q){
+      FM.forEach(function(lv){ lv.subs.forEach(function(sb){
+        var hit=sb.items.filter(function(it){ return (it[0]+' '+it[1]+' '+sb.n).toLowerCase().indexOf(q)>-1; });
+        if(!hit.length) return;
+        var h=document.createElement('div'); h.className='fsub'; h.textContent=(lv.name+' · '+sb.n).toUpperCase(); box.appendChild(h);
+        hit.forEach(function(it){ var e=fItem(it); e.open=true; box.appendChild(e); n++; });
+      }); });
+      if(!n){ var e=document.createElement('div'); e.className='fempty'; e.textContent='Match aagala. Vera keyword try pannunga.'; box.appendChild(e); }
+      return;
+    }
+    L.subs[fSb].items.forEach(function(it){ box.appendChild(fItem(it)); });
+  }
+  function fPickLevel(id,keepSub){
+    fLv=id; if(!keepSub) fSb=0; var L=fFind(id), sel=$('fSub'); sel.textContent='';
+    L.subs.forEach(function(sb,i){ var o=document.createElement('option'); o.value=i; o.textContent=sb.n; sel.appendChild(o); });
+    if(fSb>=L.subs.length) fSb=0; sel.value=fSb; fRender();
+  }
+  if(FM.length){
+    var fBox=$('fLevels');
+    FM.forEach(function(lv){
+      var b=document.createElement('button'); b.type='button'; b.className='chip'; b.dataset.l=lv.id; b.textContent=lv.name;
+      b.onclick=function(){ $('fSearch').value=''; store('stt_f_level',lv.id); store('stt_f_sub',0); fPickLevel(lv.id,false); };
+      fBox.appendChild(b);
+    });
+    $('fSub').onchange=function(){ fSb=+this.value; store('stt_f_sub',fSb); fRender(); };
+    $('fSearch').oninput=fRender;
+    var sl=store('stt_f_level'), ss=store('stt_f_sub'); fSb=(typeof ss==='number'&&ss>=0)?ss:0;
+    fPickLevel(FM.some(function(x){return x.id===sl})?sl:FM[0].id,true);
+  } else { $('formulaCard').classList.add('hidden'); }
+
+  /* ---------- sound ---------- */
+  document.addEventListener('pointerdown',function(){
+    try{
+      if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
+      if(actx.state==='suspended') actx.resume();
+    }catch(e){}
+  });
+  function chime(kind){
+    if(!soundOn||!actx) return;
+    try{
+      var seq=kind==='break'?[660,880]:kind==='focus'?[880,660]:kind==='done'?[523,659,784,1047]:[784,988];
+      var t0=actx.currentTime;
+      seq.forEach(function(fr,i){
+        var o=actx.createOscillator(), g=actx.createGain(), at=t0+i*0.28;
+        o.type='sine'; o.frequency.value=fr;
+        g.gain.setValueAtTime(0.0001,at);
+        g.gain.exponentialRampToValueAtTime(0.3,at+0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001,at+0.55);
+        o.connect(g); g.connect(actx.destination); o.start(at); o.stop(at+0.6);
+      });
+    }catch(e){}
+    try{ if(navigator.vibrate) navigator.vibrate([150,80,150]); }catch(e){}
+  }
+  $('soundBtn').onclick=function(){
+    soundOn=!soundOn; $('soundBtn').textContent='Sound: '+(soundOn?'on':'off'); store('stt_sound',soundOn);
+  };
+  var sv=store('stt_sound'); if(sv===false){soundOn=false; $('soundBtn').textContent='Sound: off';}
+  $('testSound').onclick=function(){ var was=soundOn; soundOn=true; chime('done'); soundOn=was; };
+
+  /* ---------- group session setup ---------- */
+  function setModeChoice(){
+    soloMode=false;
+    $('joinCard').classList.remove('hidden');
+    $('createBtn').innerHTML='Create a Permanent Session Link <span aria-hidden="true">→</span>';
+  }
+
+  /* ---------- create form ---------- */
+  function readForm(){
+    var f,b,c;
+    if(mode==='count'){ f=(+$('h').value||0)*60+(+$('m').value||0); b=0; c=1; }
+    else { f=+$('f').value; b=+$('b').value; c=+$('c').value; }
+    f=Math.round(f); b=Math.round(b); c=Math.round(c);
+    return {f:f,b:b,c:c};
+  }
+  function validate(v){
+    if(!(v.f>=1)) return 'At least 1 minute study time set pannunga.';
+    if(v.f>720) return 'Oru session maximum 12 hours dhaan.';
+    if(mode==='pomo'){
+      if(!(v.b>=1&&v.b<=120)) return 'Break 1 mudhal 120 minutes varaikkum irukkanum.';
+      if(!(v.c>=1&&v.c<=20)) return 'Rounds 1 mudhal 20 varaikkum set pannunga.';
+    }
+    return '';
+  }
+  function clockMin(min){ return new Date(2000,0,1,Math.floor(min/60),min%60).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}); }
+  function dailyMin(){
+    var p=/^(\d{1,2}):(\d{2})$/.exec($('dailyTime').value||'');
+    return p?(+p[1])*60+(+p[2]):-1;
+  }
+  function isDaily(){ return false; }
+  function updateSummary(){
+    var v=readForm(), e=validate(v), s=$('summary');
+    if(e){ s.textContent=''; $('err').textContent=e; return; }
+    $('err').textContent='';
+    var tot=totalSec(v);
+    var txt=mode==='count' ? 'Total duration: '+fmtDur(tot) : v.c+' rounds · '+v.f+' min focus / '+v.b+' min break = '+fmtDur(tot);
+    var startMs=now()+(+$('startIn').value)*60000;
+    s.textContent=txt+' · '+(+$('startIn').value===0?'starts now':'starts in '+$('startIn').value+' minutes')+' · ends around '+clock(startMs+tot*1000);
+  }
+  document.querySelectorAll('#modeSeg button').forEach(function(btn){
+    btn.onclick=function(){
+      mode=btn.dataset.mode;
+      document.querySelectorAll('#modeSeg button').forEach(function(x){x.classList.toggle('on',x===btn)});
+      $('countFields').classList.toggle('hidden',mode!=='count');
+      $('pomoFields').classList.toggle('hidden',mode!=='pomo');
+      updateSummary();
+    };
+  });
+  document.querySelectorAll('#countChips .chip').forEach(function(ch){ ch.onclick=function(){ $('h').value=ch.dataset.h; $('m').value=ch.dataset.m; updateSummary(); }; });
+  document.querySelectorAll('#pomoChips .chip').forEach(function(ch){ ch.onclick=function(){ $('f').value=ch.dataset.f; $('b').value=ch.dataset.b; $('c').value=ch.dataset.c; updateSummary(); }; });
+  ['h','m','f','b','c','startIn'].forEach(function(id){ $(id).addEventListener('input',updateSummary); $(id).addEventListener('change',updateSummary); });
+
+  $('createBtn').onclick=function(){
+    updateSummary();
+    if($('err').textContent) return;
+    var v=readForm(), name=$('name').value.trim(), code;
+    var s=Math.floor((now()+(+$('startIn').value)*60000)/1000);
+    code=encodeCfg({s:s,f:v.f,b:v.b,c:v.c});
+    location.hash='t='+code+(name?'&n='+encodeURIComponent(name):'');
+  };
+
+  /* ---------- join ---------- */
+  function parseJoin(text){
+    text=(text||'').trim();
+    var m=/[#&?]t=([0-9a-z.]+)/i.exec(text), n=/[#&?]n=([^&\s]*)/.exec(text), code=m?m[1]:text;
+    var c=decodeCfg(code);
+    if(!c) return null;
+    var name=''; try{ name=n?decodeURIComponent(n[1]):''; }catch(e){}
+    return {code:code,name:name};
+  }
+  $('joinBtn').onclick=function(){
+    var r=parseJoin($('joinInput').value);
+    if(!r){ $('joinErr').textContent='Indha link/code correct-ah theriyala. Marubadiyum check pannunga.'; return; }
+    $('joinErr').textContent='';
+    location.hash='t='+r.code+(r.name?'&n='+encodeURIComponent(r.name):'');
+  };
+  $('joinInput').addEventListener('keydown',function(e){ if(e.key==='Enter') $('joinBtn').click(); });
+
+  /* ---------- recent ---------- */
+  function addRecent(code,name){
+    var list=store('stt_recent')||[];
+    list=list.filter(function(x){return x.code!==code});
+    list.unshift({code:code,name:name||'',ts:Date.now()});
+    store('stt_recent',list.slice(0,6));
+  }
+  function showRecent(){
+    var list=store('stt_recent')||[], box=$('recentList');
+    box.textContent='';
+    list.forEach(function(it){
+      var c=decodeCfg(it.code); if(!c) return;
+      var row=document.createElement('div'); row.className='recent';
+      var left=document.createElement('div');
+      var a=document.createElement('div'); a.textContent=it.name||'Untitled session';
+      var sm=document.createElement('small');
+      if(c.daily){
+        sm.textContent='Every day at '+clockMin(c.startMin)+' · '+fmtDur(totalSec(c));
+      } else {
+        var end=c.s*1000+totalSec(c)*1000;
+        sm.textContent=new Date(c.s*1000).toLocaleString([], {day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+' · '+fmtDur(totalSec(c))+(end<Date.now()?' · finished':'');
+      }
+      left.appendChild(a); left.appendChild(sm);
+      var b=document.createElement('button'); b.className='btn small'; b.textContent='Open';
+      b.onclick=function(){ location.hash='t='+it.code+(it.name?'&n='+encodeURIComponent(it.name):''); };
+      row.appendChild(left); row.appendChild(b); box.appendChild(row);
+    });
+    $('recentCard').classList.toggle('hidden',!box.children.length);
+  }
+
+  /* ---------- routing ---------- */
+  function parseHash(){
+    var h=location.hash.replace(/^#/,''); if(!h) return null;
+    var p=new URLSearchParams(h), c=decodeCfg(p.get('t')); if(!c) return null;
+    c.name=p.get('n')||''; c.code=p.get('t'); c.solo=p.get('solo')==='1'; return c;
+  }
+  function route(){
+    var c=parseHash();
+    if(!c){
+      cfg=null; stopTicking(); closeMini(); releaseWake();
+      $('timerView').classList.add('hidden'); $('createView').classList.remove('hidden');
+      document.title='Serndhu Padippom — Focus & Study Together'; showRecent(); updateSummary(); return;
+    }
+    cfg=c; lastKey=null;
+    addRecent(c.code,c.name);
+    $('createView').classList.add('hidden'); $('timerView').classList.remove('hidden');
+    studyPaused=false; pauseSnapshot=null;
+    $('sname').textContent=c.name||'Serndhu Padippom session';
+    $('invitePanel').classList.remove('hidden');
+    $('stopBtn').classList.remove('hidden');
+    var base=location.href.split('#')[0];
+    var link=base+'#t='+c.code+(c.name?'&n='+encodeURIComponent(c.name):'');
+    $('linkOut').value=link;
+    startTicking(); requestWake();
+  }
+  window.addEventListener('hashchange',route);
+
+  $('newBtn').onclick=function(){ history.pushState('',document.title,location.pathname+location.search); setModeChoice(); route(); };
+  $('copyLink').onclick=function(){ copy($('linkOut').value); };
+  $('copyCode').onclick=function(){ copy(cfg.code); };
+  $('copyMsg').onclick=function(){
+    var tot=totalSec(cfg);
+    var what=(cfg.c===1&&cfg.b===0)?fmtDur(tot)+' countdown':cfg.c+' rounds · '+cfg.f+' min focus / '+cfg.b+' min break';
+    var st=cfg.s*1000>now()?'starts at '+clock(cfg.s*1000):'started at '+clock(cfg.s*1000);
+    copy('Serndhu Padippom 📚 · Study timer'+(cfg.name?' - '+cfg.name:'')+'\n'+what+', '+st+'.\nEllarum ore countdown paakka link open pannunga: '+$('linkOut').value);
+  };
+
+  /* ---------- render loop ---------- */
+  var C=565.49;
+  function view(x){
+    var single=(cfg.c===1&&cfg.b===0), o={};
+    var endTxt=clock(eff.s*1000+x.total*1000);
+    if(x.st==='wait'){
+      var when=new Date(eff.s*1000).toDateString()===new Date(now()).toDateString()?'today':'tomorrow';
+      o.big=fmt(x.toStart);
+      o.label=cfg.daily?'Next session '+when+' at '+clock(eff.s*1000):'Start aagum: '+clock(eff.s*1000);
+      o.p=0;
+      o.sub='Plan: '+fmtDur(x.total)+' · mudiyum time '+endTxt; o.bar=0; o.tab='Start aagum in '+o.big;
+    } else if(x.st==='done'){
+      o.big='00:00'; o.label='Session complete! 🏆'; o.p=1;
+      o.sub='Semma! Neenga '+fmtDur(x.focused)+' focus pannirukkeenga.'+(cfg.daily?' Next session tomorrow at '+clockMin(cfg.startMin)+'.':''); o.bar=1; o.tab='Done';
+    } else if(single){
+      o.big=fmt(x.rem); o.label='Time remaining'; o.p=x.el/x.total; o.bar=o.p;
+      o.sub='Mudiyum time '+endTxt+' · '+fmtDur(x.el)+' complete'; o.tab=o.big+' left';
+    } else {
+      o.big=fmt(x.phaseRem); o.p=x.phaseEl===undefined?(x.phaseLen-x.phaseRem)/x.phaseLen:0;
+      o.p=(x.phaseLen-x.phaseRem)/x.phaseLen;
+      o.label=(x.st==='focus'?'Focus':'Break')+' · round '+x.idx+' of '+cfg.c;
+      o.sub='Session mudiyum: '+endTxt+' · innum '+fmtDur(x.rem)+' irukku'; o.bar=x.el/x.total;
+      o.tab=o.big+' '+(x.st==='focus'?'focus':'break');
+    }
+    return o;
+  }
+  function render(){
+    if(!cfg) return;
+    // The canonical countdown always uses real time. A local pause only freezes
+    // this browser's displayed snapshot; it never adds the pause duration back.
+    var viewTime=now();
+    eff=effective(cfg,viewTime);
+    var x=compute(eff,viewTime), o=view(x);
+    var paused=studyPaused&&x.st!=='done'&&x.st!=='wait'&&!!pauseSnapshot;
+    var displayState=x.st;
+    if(paused){
+      o.big=pauseSnapshot.big;
+      o.label=pauseSnapshot.label;
+      o.p=pauseSnapshot.p;
+      o.bar=pauseSnapshot.bar;
+      o.tab=pauseSnapshot.tab;
+      o.sub='Paused for you 😌 Your break time still counts. Resume will show the current remaining time.';
+      displayState=pauseSnapshot.state;
+      // Do not fire phase-change sounds while this local display is frozen.
+      lastKey=x.key;
+    } else if(x.st==='done'){
+      studyPaused=false; pauseSnapshot=null;
+    }
+    $('stopBtn').textContent=studyPaused?'Resume for me':'Pause for me';
+    $('stopBtn').classList.toggle('hidden',x.st==='done'||x.st==='wait'||!!cfg.solo);
+    $('timerView').dataset.state=displayState;
+    $('soundWarn').classList.toggle('hidden',!soundOn||!!(actx&&actx.state==='running'));
+    $('big').textContent=o.big; $('label').textContent=o.label; $('sub').textContent=o.sub;
+    $('ring').style.strokeDashoffset=String(C*(1-Math.min(1,Math.max(0,o.p))));
+    $('bar').style.width=(Math.min(1,Math.max(0,o.bar))*100)+'%';
+    document.title=(studyPaused?'Paused · ':'')+o.tab+' · Serndhu Padippom';
+    if(!paused && lastKey!==null && x.key!==lastKey){
+      if(x.st==='focus') chime('focus'); else if(x.st==='break') chime('break'); else if(x.st==='done') chime('done');
+      if(x.st!=='wait') notify(o.label,o.sub);
+    }
+    if(!paused) lastKey=x.key;
+    updateMini(o,displayState);
+  }
+  var studyPaused=false, pauseSnapshot=null;
+  $('stopBtn').onclick=function(){
+    if(!cfg||!eff) return;
+    if(!studyPaused){
+      // Capture the current visual state, then keep the real countdown running.
+      render();
+      if(!cfg || !eff) return;
+      var current=compute(effective(cfg,now()),now());
+      if(current.st==='done'||current.st==='wait') return;
+      var currentView=view(current);
+      pauseSnapshot={
+        big:$('big').textContent,
+        label:$('label').textContent,
+        p:Math.max(0,Math.min(1,parseFloat(currentView.p)||0)),
+        bar:Math.max(0,Math.min(1,parseFloat(currentView.bar)||0)),
+        tab:currentView.tab,
+        state:current.st
+      };
+      studyPaused=true;
+      toast('Paused for you. Break time still counts; friends keep going.');
+    } else {
+      studyPaused=false;
+      pauseSnapshot=null;
+      toast('Resumed at the current remaining time! 🔥');
+    }
+    render();
+  };
+  function startTicking(){ stopTicking(); render(); tick=setInterval(render,250); }
+  function stopTicking(){ if(tick){clearInterval(tick); tick=null;} }
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden){ render(); requestWake(); } });
+
+  /* ---------- alerts (system notifications when the tab is hidden) ---------- */
+  function alertLabel(){ $('alertBtn').textContent='Alerts: '+(alertsOn?'on':'off'); }
+  try{ alertsOn=store('stt_alerts')===true && 'Notification' in window && Notification.permission==='granted'; }catch(e){}
+  alertLabel();
+  $('alertBtn').onclick=function(){
+    if(!('Notification' in window)){ toast('Indha browser-la alerts support illa'); return; }
+    if(alertsOn){ alertsOn=false; store('stt_alerts',false); alertLabel(); return; }
+    Notification.requestPermission().then(function(p){
+      alertsOn=(p==='granted'); store('stt_alerts',alertsOn); alertLabel();
+      toast(alertsOn?'Alerts on panniyachu':'Browser settings-la notifications allow pannunga');
+    });
+  };
+  function notify(title,body){
+    if(!alertsOn||!document.hidden) return;
+    try{
+      if(navigator.serviceWorker&&navigator.serviceWorker.controller){
+        navigator.serviceWorker.ready.then(function(r){ r.showNotification(title,{body:body,tag:'stt'}); });
+      } else { new Notification(title,{body:body,tag:'stt'}); }
+    }catch(e){}
+  }
+
+  /* ---------- wake lock ---------- */
+  function requestWake(){
+    try{
+      if(cfg && 'wakeLock' in navigator && !document.hidden){
+        navigator.wakeLock.request('screen').then(function(l){wake=l}).catch(function(){});
+      }
+    }catch(e){}
+  }
+  function releaseWake(){ try{ if(wake){wake.release(); wake=null;} }catch(e){} }
+
+  /* ---------- fullscreen ---------- */
+  $('fsBtn').onclick=function(){
+    try{
+      if(document.fullscreenElement){ document.exitFullscreen(); }
+      else { document.documentElement.requestFullscreen().catch(function(){toast('Indha browser-la full screen allow aagala')}); }
+    }catch(e){ toast('Full screen support illa'); }
+  };
+  document.addEventListener('fullscreenchange',function(){
+    document.body.classList.toggle('fs',!!document.fullscreenElement);
+    $('fsBtn').textContent=document.fullscreenElement?'Exit full screen':'Full screen';
+  });
+
+  /* ---------- mini floating window ---------- */
+  var COL={focus:'#86C9AC',break:'#E6B76A',wait:'#8DB9E0',done:'#BBA8E6'};
+  function closeMini(){ try{ if(mini&&mini.win&&!mini.win.closed) mini.win.close(); }catch(e){} mini=null; }
+  function buildMini(w){
+    var d=w.document;
+    d.title='Serndhu Padippom mini timer';
+    var st=d.createElement('style');
+    st.textContent='html,body{margin:0;height:100%;background:#1E2422;color:#F0ECE2;font-family:system-ui,sans-serif}'+
+      'body{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}'+
+      '#t{font-size:52px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}'+
+      '#l{margin-top:8px;font-size:14px;font-weight:600}#s{margin-top:4px;font-size:12px;color:#AAB3AC}';
+    d.head.appendChild(st);
+    var t=d.createElement('div'); t.id='t'; var l=d.createElement('div'); l.id='l'; var s=d.createElement('div'); s.id='s';
+    d.body.appendChild(t); d.body.appendChild(l); d.body.appendChild(s);
+    mini={win:w,t:t,l:l,s:s};
+    w.addEventListener('pagehide',function(){mini=null});
+  }
+  $('miniBtn').onclick=function(){
+    /* Electron uses a native always-on-top window. Browsers use their supported popup fallback. */
+    if(desktopBridge){
+      if(isFloatingWindow){ desktopBridge.closeCurrentWindow(); }
+      else { desktopBridge.openFloatingTimer().catch(function(){toast('Mini timer open aagala. Marubadi try pannunga.');}); }
+      return;
+    }
+    if(mini){ closeMini(); return; }
+    var done=function(w){ if(!w){ toast('Popup block aagiduchu. Browser settings-la allow pannunga.'); return; } buildMini(w); render(); };
+    if('documentPictureInPicture' in window){
+      documentPictureInPicture.requestWindow({width:300,height:240}).then(done).catch(function(){
+        done(window.open('','stt_mini','popup,width=320,height=260'));
+      });
+    } else {
+      done(window.open('','stt_mini','popup,width=320,height=260'));
+    }
+  };
+  function updateMini(o,state){
+    if(!mini) return;
+    try{
+      if(mini.win.closed){mini=null;return;}
+      mini.t.textContent=o.big; mini.l.textContent=o.label; mini.s.textContent=o.sub;
+      mini.t.style.color=COL[state]||'#fff';
+    }catch(e){mini=null;}
+  }
+
+  /* ---------- clock skew (only corrects obviously wrong clocks) ---------- */
+  function syncClock(){
+    try{
+      if(location.protocol==='file:') return;
+      var t0=Date.now();
+      fetch(location.pathname+'?_='+t0,{method:'HEAD',cache:'no-store'}).then(function(r){
+        var d=r.headers.get('date'); if(!d) return;
+        var t1=Date.now(), srv=new Date(d).getTime()+500, local=(t0+t1)/2, diff=srv-local;
+        if(Math.abs(diff)>4000){ offset=diff; toast('Device time adjust panniyachu.'); }
+      }).catch(function(){});
+    }catch(e){}
+  }
+
+  /* ---------- start ---------- */
+  if(location.protocol==='file:') $('fileWarn').classList.remove('hidden');
+  try{ if('serviceWorker' in navigator && location.protocol.indexOf('http')===0) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
+  syncClock();
+  setModeChoice();
+  route();
+  setInterval(function(){ if(!cfg) updateSummary(); },15000);
+})();
+</script>
+</body>
+</html>
