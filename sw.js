@@ -1,6 +1,6 @@
 // This standalone redesign uses its own cache and never clears another site's caches.
-var CACHE = 'serndhu-padippom-cache-v4';
-var FILES = ['./', './index.html', './formulas.js', './manifest.json', './icon-192.png', './icon-512.png'];
+var CACHE = 'serndhu-padippom-cache-v8';
+var FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(FILES); }).then(function () { return self.skipWaiting(); }));
 });

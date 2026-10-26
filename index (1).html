@@ -1,0 +1,1717 @@
+<!doctype html>
+<html lang="ta">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serndhu Padippom — Study Together</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#F4F1EA">
+<meta name="description" content="Serndhu Padippom — shared study timer for friends.">
+<meta name="application-name" content="Serndhu Padippom">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Serndhu Padippom">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem("stt_theme"));if(t!=="dark"&&t!=="light")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#151918":"#F4F1EA";}catch(e){}})();</script>
+<style>
+/* Serndhu Padippom — calm, flat, study-friendly theme */
+:root{color-scheme:light;
+  --bg:#F4F1EA;--card:#FCFAF5;--soft:#ECE8DD;--line:#D8D3C5;--track:#D8D3C5;
+  --text:#26302B;--muted:#5C665F;
+  --accent:#2E6B5A;--onAccent:#FFFFFF;--accentSoft:#DDEBE3;--accentText:#1F5244;
+  --focus:#2E6B5A;--break:#9A5A12;--done:#6A5698;--wait:#3F6E96;
+  --warn:#F3E6C4;--danger:#B3402F}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#151918;--card:#1E2422;--soft:#28302D;--line:#38423E;--track:#3A4541;
+  --text:#F0ECE2;--muted:#AAB3AC;
+  --accent:#86C9AC;--onAccent:#10231B;--accentSoft:#24332D;--accentText:#A9DEC6;
+  --focus:#86C9AC;--break:#E6B76A;--done:#BBA8E6;--wait:#8DB9E0;
+  --warn:#3D3520;--danger:#FF9F90}
+
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans Tamil",sans-serif;line-height:1.55}
+body{padding:0 20px 56px}
+button,input,select{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}
+
+/* header */
+header{max-width:1120px;margin:auto;padding:20px 0;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:12px;font-size:19px;font-weight:800;letter-spacing:-.4px}
+.brand:before{content:'📚';display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--accentSoft);border:1px solid var(--line);font-size:22px}
+.brand .brand-mark{display:none}
+.brand-name{display:flex;flex-direction:column}
+.brand-tagline{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0}
+main{max-width:1120px;margin:auto}
+
+/* buttons */
+.btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:11px 15px;font-weight:700;font-size:13px;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--soft);border-color:var(--muted)}
+.btn.primary{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:18px;padding:16px;font-size:15px;border:0;border-radius:14px;background:var(--accent);color:var(--onAccent)}
+.btn.primary:hover{background:var(--accent);filter:brightness(1.08)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* hero */
+.welcome{margin-top:12px;padding:38px 42px 36px;border-radius:26px;background:var(--accentSoft);border:1px solid var(--line)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accentText);font-size:10px;font-weight:850;letter-spacing:1.5px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+h1{max-width:720px;margin:20px 0 14px;font-size:clamp(38px,5.5vw,62px);line-height:1.05;letter-spacing:-2.4px;font-weight:820;color:var(--text)}
+h1 span{color:var(--accentText)}
+.welcome-copy{max-width:610px;margin:0;color:var(--muted);font-size:15px;line-height:1.75}
+
+/* motivational quote */
+.quote{display:flex;align-items:flex-start;gap:14px;margin-top:24px;padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);max-width:640px}
+.quote-mark{flex:0 0 auto;font-size:26px;line-height:1;color:var(--accent)}
+.quote-body{flex:1;min-width:0}
+.quote-kicker{font-size:10px;font-weight:850;letter-spacing:1.4px;color:var(--muted)}
+.quote-text{margin:4px 0 0;font-size:16px;font-weight:650;line-height:1.55;color:var(--text)}
+.quote-next{flex:0 0 auto;align-self:center;border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700}
+.quote-next:hover{border-color:var(--muted)}
+.quote.slim{margin:16px auto 0;max-width:780px}
+
+/* layout + cards */
+.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:22px;align-items:start;margin-top:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:27px;margin-bottom:18px}
+.card h2{font-size:19px;letter-spacing:-.4px;margin:0 0 4px}
+.card-intro{max-width:520px;margin:0 0 20px;color:var(--muted);font-size:13px;line-height:1.7}
+.setup-card{position:relative}
+.setup-card:before{content:'YOUR SESSION';position:absolute;right:24px;top:27px;font-size:9px;font-weight:900;letter-spacing:1.5px;color:var(--muted)}
+
+/* form */
+label,.label{display:block;margin:18px 0 7px;font-size:12px;font-weight:800;color:var(--text)}
+input,select{width:100%;min-width:0;padding:13px 14px;font-size:14px;color:var(--text);background:var(--soft);border:1px solid var(--line);border-radius:13px}
+input:hover,select:hover{border-color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:0}
+.seg{display:flex;gap:4px;padding:5px;background:var(--soft);border:1px solid var(--line);border-radius:15px}
+.seg button{flex:1;padding:11px 9px;border:0;border-radius:11px;background:transparent;color:var(--muted);font-size:13px;font-weight:700}
+.seg button.on{background:var(--card);color:var(--accentText);box-shadow:inset 0 0 0 1px var(--line)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--text);font-size:12px;font-weight:700;transition:background .15s,border-color .15s}
+.chip:hover,.chip:focus{background:var(--accentSoft);border-color:var(--accent)}
+.summary{margin-top:16px;padding:14px;border-radius:14px;background:var(--soft);border:1px solid var(--line);font-size:13px;line-height:1.6;color:var(--text)}
+.err{min-height:15px;margin-top:8px;font-size:12px;color:var(--danger)}
+.hint,.privacy-note{margin-top:12px;font-size:12px;line-height:1.6;color:var(--muted)}
+.privacy-note{text-align:center}
+
+/* side card */
+.side-card{background:var(--accentSoft)}
+.side-icon{display:grid;place-items:center;width:52px;height:52px;margin-bottom:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:24px}
+.side-card h3{margin:0 0 8px;font-size:20px;letter-spacing:-.4px}
+.side-card p{margin:0;font-size:13px;line-height:1.7;color:var(--muted)}
+.feature{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:11px 10px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-size:12px}
+.feature b{display:block;font-size:12px}
+.feature small{display:block;margin-top:2px;font-size:11px;line-height:1.55;color:var(--muted)}
+.feature-icon{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:var(--accentSoft);font-size:15px}
+
+/* join + recent */
+.join-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.join-heading h2{margin:0 0 3px}.join-heading p{margin:0;font-size:12px;color:var(--muted)}
+.join-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:var(--accentSoft);color:var(--accentText);font-size:20px}
+.linkbox{display:flex;gap:8px}.linkbox input{flex:1;min-width:0}
+.recent{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line);font-size:13px}
+.recent small{display:block;color:var(--muted)}
+.banner,.soundwarn{margin:14px 0;padding:10px 14px;border-radius:12px;background:var(--warn);border:1px solid var(--line);color:var(--text);font-size:12px}
+
+/* timer */
+.stage{text-align:center;padding:34px 24px 30px}
+.sname{margin-bottom:10px;font-size:15px;font-weight:650;color:var(--muted);word-break:break-word}
+.ringwrap{position:relative;width:min(72vw,330px);aspect-ratio:1;margin:14px auto}
+.ringwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ringbg{fill:none;stroke:var(--track);stroke-width:13}
+.ringfg{fill:none;stroke:var(--accent);stroke-width:13;stroke-linecap:round;transition:stroke-dashoffset .3s linear,stroke .3s}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#big{font-size:clamp(46px,11vw,70px);font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-2px;color:var(--text)}
+#label{margin-top:6px;font-size:14px;font-weight:800;color:var(--text)}
+#sub{max-width:520px;margin:16px auto 0;font-size:13px;line-height:1.7;color:var(--muted)}
+.bar{height:8px;max-width:420px;margin:18px auto 0;border-radius:99px;background:var(--track);overflow:hidden}
+.bar i{display:block;width:0;height:100%;border-radius:99px;background:var(--accent);transition:width .3s linear,background .3s}
+.tools{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:20px}
+#timerView[data-state="focus"] .ringfg,#timerView[data-state="focus"] .bar i{stroke:var(--focus);background:var(--focus)}
+#timerView[data-state="break"] .ringfg,#timerView[data-state="break"] .bar i{stroke:var(--break);background:var(--break)}
+#timerView[data-state="wait"] .ringfg,#timerView[data-state="wait"] .bar i{stroke:var(--wait);background:var(--wait)}
+#timerView[data-state="done"] .ringfg,#timerView[data-state="done"] .bar i{stroke:var(--done);background:var(--done)}
+#stopBtn{font-weight:800;background:var(--warn);color:var(--text);border-color:var(--line)}
+#stopBtn:hover{background:var(--warn);border-color:var(--muted)}
+.invite{max-width:780px;margin:16px auto}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 16px;border-radius:99px;background:var(--text);color:var(--bg);font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9}
+.toast.show{opacity:1}
+
+/* full screen + floating desktop window */
+body.fs header,body.fs .invite,body.fs .tools .nofs{display:none}
+body.fs{padding:0 10px 20px}
+body.foclyra-floating{padding:10px;background:var(--bg)}
+body.foclyra-floating header,body.foclyra-floating #createView,body.foclyra-floating .invite,body.foclyra-floating #fileWarn,body.foclyra-floating .quote{display:none!important}
+body.foclyra-floating main{max-width:none}
+body.foclyra-floating .stage{padding:8px}
+body.foclyra-floating .ringwrap{width:112px}
+body.foclyra-floating #big{font-size:34px}
+body.foclyra-floating #miniBtn,body.foclyra-floating #fsBtn,body.foclyra-floating #soundBtn,body.foclyra-floating #alertBtn,body.foclyra-floating #newBtn{display:none!important}
+
+
+/* quote inside the timer card */
+.stage .quote.slim{margin:18px auto 0;max-width:560px;text-align:left}
+/* CA formulas (start page, side) */
+.chip.on{background:var(--accentSoft);border-color:var(--accent);color:var(--accentText)}
+.fkicker{font-size:11px;font-weight:850;letter-spacing:1.4px;color:var(--accentText)}
+.fcard h2{margin:8px 0 4px}
+.fcard select,.fcard input{margin-top:10px;padding:11px 12px;font-size:13px}
+.fnote{margin-top:10px;padding:9px 11px;border-radius:12px;background:var(--warn);border:1px solid var(--line);font-size:11px;line-height:1.6}
+.fwide{margin-top:22px}
+.frow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}.frow>select,.frow>input{flex:1;min-width:200px;margin:0}
+#fMode{flex:0 0 auto}#fMode button{padding:9px 14px}
+#fList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:start;margin-top:12px}
+#fList details{border:1px solid var(--line);border-radius:14px;background:var(--soft);margin:0}
+#fList summary{padding:11px 13px;font-size:13px;font-weight:750;cursor:pointer}
+#fList .fsub,#fList .fempty{grid-column:1/-1}
+#fList .fsub{margin:10px 2px 0;font-size:10px;font-weight:850;letter-spacing:1.2px;color:var(--muted)}
+.fbody{white-space:pre-line;padding:2px 13px 12px;font-size:13px;line-height:1.75;overflow-wrap:anywhere}
+.fexp{margin:0 13px 13px;padding:10px 12px;border-radius:12px;background:var(--accentSoft);border:1px solid var(--line);font-size:12.5px;line-height:1.7;color:var(--accentText)}
+.fempty{padding:14px 4px;font-size:12px;color:var(--muted)}
+
+/* focus sounds + visual effects (timer page) */
+.stage{position:relative;overflow:hidden}
+.stage>*{position:relative;z-index:1}
+.fx{position:absolute!important;inset:0;z-index:0!important;pointer-events:none;opacity:0;transition:opacity .8s}
+.fx.white,.fx.brown{opacity:1;background:radial-gradient(circle at 50% 45%,var(--accentSoft),transparent 65%);animation:breathe 6s ease-in-out infinite}
+.fx.rain{opacity:1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='120'%3E%3Cg stroke='%236f96c8' stroke-opacity='.5' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M10 5l-3 18M42 40l-3 18M24 78l-3 18M52 100l-3 18M5 60l-3 14'/%3E%3C/g%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='180'%3E%3Cg stroke='%236f96c8' stroke-opacity='.3' stroke-width='1' stroke-linecap='round'%3E%3Cpath d='M20 10l-3 20M70 60l-3 20M40 120l-3 20M80 150l-3 20'/%3E%3C/g%3E%3C/svg%3E");background-size:60px 120px,90px 180px;animation:rainfall .8s linear infinite}
+.fx.waves{opacity:1;overflow:hidden}
+.fx.waves::before,.fx.waves::after{content:'';position:absolute;left:-60%;width:220%;height:220%;top:80%;border-radius:42%;background:rgba(80,140,200,.2);animation:spin 14s linear infinite}
+.fx.waves::after{top:86%;background:rgba(80,140,200,.14);animation-duration:21s;animation-direction:reverse}
+.fx.fire{opacity:1;background:radial-gradient(ellipse 70% 55% at 50% 108%,rgba(255,130,40,.4),transparent 70%),radial-gradient(ellipse 40% 35% at 50% 112%,rgba(255,200,80,.38),transparent 70%);animation:flicker 2.3s ease-in-out infinite alternate}
+@keyframes breathe{50%{transform:scale(1.07);opacity:.7}}
+@keyframes rainfall{to{background-position:0 120px,0 180px}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flicker{0%{opacity:.72}20%{opacity:1}45%{opacity:.8}70%{opacity:.97}100%{opacity:.8}}
+@media(prefers-reduced-motion:reduce){.fx,.fx::before,.fx::after{animation:none!important}}
+.amb{max-width:520px;margin:20px auto 0;padding:14px;border-radius:16px;background:var(--soft);border:1px solid var(--line);text-align:left}
+.amb-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.amb-state{font-size:11px;color:var(--muted)}
+.amb .chips{margin-top:10px}
+.amb-vol{display:flex;align-items:center;gap:10px;margin:12px 0 0;font-size:12px}
+.amb-vol input{padding:0;border:0;background:none;accent-color:var(--accent)}
+body.foclyra-floating .amb,body.foclyra-floating .fx{display:none!important}
+
+/* Focus Sounds */
+:root{--tl:86%;--ts:93%}
+:root[data-theme="dark"]{--tl:30%;--ts:21%}
+.amb-player{margin-top:16px;padding:14px;border-radius:18px;background:var(--soft);border:1px solid var(--line);transition:border-color .3s}
+.amb-player.playing{border-color:var(--accent)}.amb-player.off{opacity:.6;pointer-events:none}
+.amb-top{display:flex;align-items:center;gap:10px}.amb-info{display:flex;flex-direction:column;min-width:0}
+.amb-name{font-size:13px}.amb-stat{font-size:11px;color:var(--muted)}
+.amb-ctl{display:flex;align-items:center;gap:8px;margin-top:10px}
+.amb-btn{flex:0 0 auto;display:grid;place-items:center;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px}
+.amb-btn.main{background:var(--accent);color:var(--onAccent);border:0}
+.amb-vol{flex:1;min-width:70px;width:auto;height:28px;padding:0;border:0;background:transparent;accent-color:var(--accent)}
+.amb-sel{margin-top:10px;padding:10px 12px;font-size:13px}
+.amb-tg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px}
+.amb-tg label{display:flex;align-items:center;gap:6px;margin:0;font-size:12px;font-weight:650;color:var(--muted);cursor:pointer}
+.amb-tg input{width:auto;padding:0;accent-color:var(--accent)}
+.amb-player.mini{max-width:520px;margin:20px auto 0;text-align:center}
+.amb-player.mini:before{content:'\1F3A7  FOCUS SOUNDS';display:block;margin-bottom:10px;font-size:10px;font-weight:850;letter-spacing:1.4px;color:var(--accentText)}
+.amb-player.mini .amb-top,.amb-player.mini .amb-ctl,.amb-player.mini .amb-tg{justify-content:center}
+.amb-player.mini .amb-info{align-items:flex-start;text-align:left}
+.amb-player.mini .amb-vol{max-width:240px}
+body.fs .amb-tg,body.fs .amb-sel{display:none}
+body.foclyra-floating .amb-player{display:none!important}
+@media(prefers-reduced-motion:reduce){.amb-card,.amb-eq i{transition:none;animation:none!important}}
+
+@media(max-width:760px){
+  body{padding:0 14px 40px}
+  header{padding:14px 0}
+  .brand{font-size:16px}.brand:before{width:38px;height:38px}.brand-tagline{font-size:9px}
+  .welcome{margin-top:8px;padding:26px 20px 24px;border-radius:20px}
+  h1{font-size:clamp(34px,10vw,46px);letter-spacing:-1.7px}
+  .welcome-copy{font-size:14px}
+  #fList{grid-template-columns:1fr}
+  .quote{padding:14px;flex-wrap:wrap}.quote-body{flex:1 1 calc(100% - 44px)}.quote-next{margin-left:40px;align-self:flex-start}.quote-text{font-size:15px}
+  .layout{grid-template-columns:1fr;gap:0}
+  .card{padding:20px;border-radius:20px}
+  .setup-card:before{display:none}
+  .stage{padding:24px 14px}
+  .ringwrap{width:min(76vw,285px)}
+  .linkbox{flex-wrap:wrap}.linkbox input{flex-basis:100%}.linkbox button{width:100%}
+  .tools .btn{font-size:12px;padding:9px 11px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand" aria-label="Serndhu Padippom home">
+    <svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="Serndhu Padippom logo" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="44" fill="none" stroke="#a99aff" stroke-width="4.5"/>
+      <path d="M25 57 C27 38 39 27 52 29 C67 30 76 41 73 54 C70 67 57 74 45 68 C36 63 37 51 44 46 C50 42 57 44 61 49" fill="none" stroke="currentColor" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="72" cy="27" r="7" fill="#a99aff"/>
+    </svg>
+    <span class="brand-name"><span>Serndhu Padippom</span><small class="brand-tagline">Serndhu focus pannalaam. Serndhu jeyippom!</small></span>
+  </div>
+  <button class="btn small" id="themeBtn" title="Theme maathunga">◐ Theme</button>
+</header>
+
+<main>
+  <div id="fileWarn" class="banner hidden">
+    Neenga file-a direct open pannirukkeenga. Share link friends-kku work aaganumna website-a online-la host pannanum.
+  </div>
+
+  <!-- CREATE VIEW -->
+  <section id="createView">
+    <section class="welcome" aria-labelledby="welcomeTitle">
+      <div class="eyebrow"><span class="live-dot"></span> YOUR SHARED FOCUS SPACE</div>
+      <h1 id="welcomeTitle">Serndhu padippom.<br><span>Goal-ah mudippom!</span></h1>
+      <p class="welcome-copy">Friends-oda ore countdown-la focus pannunga. Distraction-ku konjam leave kuduppom! 😎</p>
+      <div class="quote" id="quoteHero">
+        <span class="quote-mark" aria-hidden="true">✦</span>
+        <div class="quote-body"><div class="quote-kicker">INNAIKKU ORU REMINDER</div><p class="quote-text"></p></div>
+        <button class="quote-next" type="button">Adutha quote ↻</button>
+      </div>
+    </section>
+    <div class="layout">
+      <div>
+        <div class="card setup-card" id="timerSetupAnchor">
+          <h2>Study session create pannunga</h2>
+          <p class="card-intro">Timer set pannunga, link share pannunga, ellarum serndhu focus pannalaam.</p>
+          <label for="name">Session name</label>
+          <input id="name" maxlength="60" placeholder="Ex: Maths revision - Day 1 📚">
+          <label>Timer type</label>
+          <div class="seg" id="modeSeg"><button data-mode="count" class="on">One Countdown</button><button data-mode="pomo">Focus + Break</button></div>
+          <div id="countFields">
+            <div class="row"><div><label for="h">Hours</label><input id="h" type="number" min="0" max="12" value="1"></div><div><label for="m">Minutes</label><input id="m" type="number" min="0" max="59" value="0"></div></div>
+            <div class="chips" id="countChips"><button class="chip" data-h="1" data-m="0">1 hour</button><button class="chip" data-h="1" data-m="30">1 hour 30 min</button><button class="chip" data-h="2" data-m="0">2 hours</button><button class="chip" data-h="3" data-m="0">3 hours</button></div>
+          </div>
+          <div id="pomoFields" class="hidden">
+            <div class="row"><div><label for="f">Focus time (min)</label><input id="f" type="number" min="1" max="240" value="50"></div><div><label for="b">Break time (min)</label><input id="b" type="number" min="1" max="60" value="10"></div><div><label for="c">Rounds</label><input id="c" type="number" min="1" max="20" value="3"></div></div>
+            <div class="chips" id="pomoChips"><button class="chip" data-f="25" data-b="5" data-c="4">25 / 5 × 4</button><button class="chip" data-f="50" data-b="10" data-c="3">50 / 10 × 3</button><button class="chip" data-f="90" data-b="15" data-c="2">90 / 15 × 2</button></div>
+          </div>
+          <label for="startIn">Start timer</label>
+          <select id="startIn"><option value="0">Start now</option><option value="5">In 5 minutes</option><option value="10">In 10 minutes</option></select>
+          <div class="summary" id="summary"></div><div class="err" id="err"></div>
+          <button class="btn primary" id="createBtn">Create a Permanent Session Link <span aria-hidden="true">→</span></button>
+          <p class="privacy-note">One session · One permanent link · Share with your study buddies.</p>
+        </div>
+        <div class="card join-card" id="joinCard">
+          <div class="join-heading"><span class="join-icon" aria-hidden="true">↗</span><div><h2>Already have a room link?</h2><p>Friend share panna session link-a paste pannunga.</p></div></div>
+          <div class="linkbox"><input id="joinInput" placeholder="Paste session link or code"><button class="btn" id="joinBtn">Join session</button></div><div class="err" id="joinErr"></div>
+        </div>
+        <div class="card hidden" id="recentCard"><h2>Recent sessions</h2><div id="recentList"></div></div>
+      </div>
+      <aside>
+        <div class="card side-card">
+          <div class="side-icon">👯</div><h3>Friends-oda focus pannunga</h3><p>Google Meet-la irundhe indha link-a share pannunga. Friends same session countdown-a open pannalaam.</p>
+          <div class="feature"><span class="feature-icon">⏱️</span><div><b>One shared countdown</b><small>Ellarukkum same session end time.</small></div></div>
+          <div class="feature"><span class="feature-icon">🔗</span><div><b>Permanent session link</b><small>Indha session mudiyura varaikkum same link use pannunga.</small></div></div>
+          <div class="feature"><span class="feature-icon">☕</span><div><b>Pause for me</b><small>Un timer mattum pause; friends timer continue aagum.</small></div></div>
+          <div class="feature"><span class="feature-icon">🚀</span><div><b>Small steps. Big goals.</b><small>Konjam focus pannunga. Progress build aagum!</small></div></div>
+        </div>
+      </aside>
+    </div>
+    <section class="card fcard fwide" id="formulaCard" aria-labelledby="fTitle">
+      <span class="fkicker">📐 CA FORMULAS &amp; SHORTCUTS</span>
+      <h2 id="fTitle">CA Formulas · Foundation · Inter Group 1 · Inter Group 2</h2>
+      <p class="card-intro">Learn mode: ovvoru formula-kum simple explanation irukku (first-time padikkiravangalukku). Revise mode: formula mattum, ellaam open-ah.</p>
+      <div class="frow"><div class="chips" id="fLevels"></div><div class="seg" id="fMode"><button type="button" data-m="learn" class="on">💡 Learn</button><button type="button" data-m="revise">⚡ Revise</button></div></div>
+      <div class="frow"><select id="fSub" aria-label="Paper select pannunga"></select><input id="fSearch" type="search" placeholder="Search: EOQ, HRA, NPV, GST..." aria-label="Formula search"></div>
+      <div class="fnote" id="fNote"></div>
+      <div id="fList"></div>
+      <div class="hint">Exam-ku munnadi latest ICAI Study Material / RTP / MTP / Study Guidelines-la confirm pannunga. Last checked: 25 Oct 2026.</div>
+    </section>
+  </section>
+
+  <!-- TIMER VIEW -->
+  <section id="timerView" class="hidden" data-state="wait">
+    <div id="soundWarn" class="soundwarn hidden">Sound enable panna page-la oru thadava tap pannunga.</div>
+    <div class="card stage">
+      <div class="fx" id="fx" aria-hidden="true"></div>
+      <div class="sname" id="sname"></div>
+      <div class="ringwrap">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="ringbg" cx="100" cy="100" r="90"></circle>
+          <circle class="ringfg" id="ring" cx="100" cy="100" r="90" stroke-dasharray="565.49" stroke-dashoffset="565.49"></circle>
+        </svg>
+        <div class="center">
+          <div id="big" aria-live="off">00:00</div>
+          <div id="label"></div>
+        </div>
+      </div>
+      <div id="sub"></div>
+      <div class="quote slim" id="quoteTimer">
+      <span class="quote-mark" aria-hidden="true">✦</span>
+      <div class="quote-body"><div class="quote-kicker">KEEP GOING</div><p class="quote-text"></p></div>
+      <button class="quote-next" type="button">Adutha quote ↻</button>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+      <div class="amb" id="ambPanel">
+        <div class="amb-head"><span class="fkicker">🎧 FOCUS SOUNDS</span><span class="amb-state" id="ambState">Off</span></div>
+        <div class="chips" id="ambChips">
+          <button class="chip on" type="button" data-a="off">🔇 Off</button>
+          <button class="chip" type="button" data-a="white">⚪ White noise</button>
+          <button class="chip" type="button" data-a="brown">🟤 Brown noise</button>
+          <button class="chip" type="button" data-a="rain">🌧️ Rain</button>
+          <button class="chip" type="button" data-a="waves">🌊 Beach waves</button>
+          <button class="chip" type="button" data-a="fire">🔥 Fireplace</button>
+        </div>
+        <label class="amb-vol">Volume <input type="range" id="ambVol" min="0" max="100" value="60" aria-label="Focus sound volume"></label>
+      </div>
+      <div class="tools">
+        <button class="btn small" id="miniBtn" title="Small timer window">Mini timer</button>
+        <button class="btn small" id="fsBtn">Full screen</button>
+        <button class="btn small" id="soundBtn">Sound: on</button>
+        <button class="btn small" id="alertBtn">Alerts: off</button>
+        <button class="btn small" id="stopBtn" title="Pauses the countdown only for you. Other participants continue running.">Pause for me</button>
+        <button class="btn small nofs" id="newBtn">Pudhu timer</button>
+      </div>
+      <div id="ambTimer"></div>
+    </div>
+
+    <div class="card invite" id="invitePanel">
+      <h2>Friends-a invite pannunga 👯</h2>
+      <div class="linkbox">
+        <input id="linkOut" readonly>
+        <button class="btn" id="copyLink">Link copy</button>
+      </div>
+      <div class="tools" style="justify-content:flex-start">
+        <button class="btn small" id="copyMsg">Invite message copy</button>
+        <button class="btn small" id="copyCode">Code mattum copy</button>
+        <button class="btn small" id="testSound">Sound test</button>
+      </div>
+      <div class="hint">Share this permanent link in Google Meet chat or WhatsApp. The same link stays valid for this session until its timer finishes. <b>Pause for me</b> pauses only your own timer view; everyone else continues.</div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+/* Serndhu Padippom — CA formulas & shortcuts.
+   Last checked: 25 Oct 2026. Structure: level → subject → [title, body].
+   Add a new topic by adding [`Title`, `Body`] to any subject below. */
+window.CA_FORMULAS=[
+{id:'F',name:'Foundation',note:'Foundation · Jan 2027 / May 2027 attempts (4 papers)',subs:[
+{n:'Paper 1 · Accounting',items:[
+['Accounting equation & capital',`Assets = Capital + Liabilities
+Closing capital = Opening capital + Profit + Fresh capital − Drawings`],
+['Depreciation',`SLM = (Cost − Residual value) / Useful life
+WDV: Depreciation = Rate % × Opening book value
+Profit/Loss on sale = Sale price − Book value on date of sale
+Part year → pro-rata by months`],
+['Profit · Markup · Margin',`COGS = Opening stock + Net purchases + Direct exp − Closing stock
+Gross profit = Net sales − COGS
+Net profit = GP + Other income − Indirect expenses
+Shortcut: Margin % = Markup / (100 + Markup) · Markup % = Margin / (100 − Margin)`],
+['Bank Reconciliation (BRS)',`Cash book (Dr) balance
++ Cheques issued, not presented
+− Cheques deposited, not cleared
++ Bank credits not in cash book (interest, direct deposit)
+− Bank debits not in cash book (charges, direct payment)
+= Pass book balance
+Overdraft-ah irundha ellaa signs-um reverse`],
+['Bills of exchange',`Due date = Date of drawing + Term + 3 days of grace
+Discount = Bill amount × Rate × Unexpired period / 12
+Net proceeds = Bill amount − Discount`],
+['Partnership – ratios, interest, goodwill',`Sacrificing ratio = Old − New · Gaining ratio = New − Old
+Interest on capital = Capital × Rate × Time
+Interest on drawings (equal amounts): every month → 6.5 (start) / 6 (mid) / 5.5 (end) months · every quarter → 7.5 / 6 / 4.5 months
+Super profit = Average profit − Normal profit
+Goodwill = Average profit × Years' purchase`],
+['Incomplete records',`Profit = Closing capital − Opening capital + Drawings − Fresh capital
+Credit sales = Closing debtors + Cash received + Discount + Returns + Bad debts − Opening debtors
+Credit purchases = Closing creditors + Payments + Discount + Returns − Opening creditors`],
+['Not-for-profit organisations',`Subscription for the year = Received + O/s at end + Advance at start − O/s at start − Advance at end
+Consumption = Opening stock + Purchases − Closing stock
+Capital fund = Assets − Liabilities
+Receipts & Payments = cash basis · Income & Expenditure = accrual basis`],
+['Company accounts',`Securities premium = Issue price − Face value
+Capital reserve on re-issue = Forfeited amount − Discount allowed on re-issue
+Bonus shares: from free reserves / securities premium / CRR (not revaluation reserve)
+Redemption of preference shares: CRR = Nominal value redeemed − Fresh issue proceeds`]]},
+{n:'Paper 2 · Business Laws',items:[
+['Valid contract (S.10)',`Offer + Acceptance + Consideration + Competent parties + Free consent + Lawful object, not expressly declared void
+Minor's agreement = void ab initio · Age of majority 18 (21 if guardian appointed)
+Voidable: coercion S.15 · undue influence S.16 · fraud S.17 · misrepresentation S.18
+Void: wagering S.30 · restraint of trade S.27 · bilateral mistake of fact S.20`],
+['Breach & remedies (ICA)',`S.73: damages for loss that naturally arises; remote loss not payable
+S.74: liquidated damages – reasonable compensation, not exceeding the stipulated sum
+S.56: impossible act after contract = contract becomes void`],
+['Sale of Goods Act 1930',`Condition (S.12) – breach → repudiate + damages · Warranty – breach → damages only
+Implied conditions: title S.14 · description S.15 · quality/fitness S.16 · sample S.17
+Implied warranties: quiet possession · freedom from encumbrance
+Unpaid seller: lien · stoppage in transit · resale (S.46)`],
+['Partnership Act 1932 · LLP Act 2008',`Partnership: min 2, max 50 · registration optional (S.58) · not a separate legal entity · partners' liability joint & several
+LLP: min 2 partners, no maximum · separate legal entity · perpetual succession
+LLP: at least 2 designated partners (1 resident in India) · LLP agreement filed within 30 days of incorporation`],
+['Companies Act 2013 – basics',`Members: Private 2–200 · Public min 7 (no max) · OPC 1
+Directors: Private min 2 · Public min 3 · OPC min 1 · Max 15
+Commencement of business declaration: within 180 days of incorporation (S.10A)
+Registered office: within 30 days of incorporation`],
+['Negotiable Instruments Act 1881',`Promissory note S.4 · Bill of exchange S.5 · Cheque S.6
+Cheque valid for 3 months from date
+S.138 dishonour: notice within 30 days of dishonour info → drawer pays within 15 days → complaint within 1 month after that
+Penalty: up to 2 years' imprisonment or fine up to twice the cheque amount, or both`]]},
+{n:'Paper 3 · Quantitative Aptitude',items:[
+['Indices & Logarithms',`a^m · a^n = a^(m+n) · a^m / a^n = a^(m−n) · (a^m)^n = a^(mn) · a⁰ = 1
+log(mn) = log m + log n · log(m/n) = log m − log n
+log mⁿ = n log m · log_b a = log a / log b · log_a a = 1 · log 1 = 0`],
+['Quadratic equation',`ax² + bx + c = 0 → x = [−b ± √(b² − 4ac)] / 2a
+Sum of roots = −b/a · Product = c/a
+D = b² − 4ac: D > 0 real & distinct · D = 0 equal · D < 0 imaginary`],
+['Mathematics of finance',`SI = PRT / 100 · A = P (1 + r/100)ⁿ · CI = A − P
+Effective rate = (1 + i/m)^m − 1
+FV of annuity = C [((1+i)ⁿ − 1) / i] · PV of annuity = C [(1 − (1+i)^−n) / i]
+Annuity due = Ordinary annuity × (1 + i) · Perpetuity PV = C / i
+Sinking fund = FV × i / ((1+i)ⁿ − 1)`],
+['Permutation · Combination · Sets',`nPr = n! / (n−r)! · nCr = n! / [r!(n−r)!] · nCr = nC(n−r)
+nCr + nC(r−1) = (n+1)Cr · Circular arrangement = (n−1)!
+Alike items: n! / (p! q! r!)
+n(A∪B) = n(A) + n(B) − n(A∩B) · Subsets = 2ⁿ · Proper subsets = 2ⁿ − 1`],
+['AP · GP · Means',`AP: Tn = a + (n−1)d · Sn = n/2 [2a + (n−1)d]
+GP: Tn = a r^(n−1) · Sn = a (rⁿ − 1)/(r − 1) (r > 1) · S∞ = a / (1 − r), |r| < 1
+AM = (a+b)/2 · GM = √(ab) · HM = 2ab/(a+b) · GM² = AM × HM`],
+['Calculus basics',`d/dx (xⁿ) = n xⁿ⁻¹ · (uv)' = uv' + vu' · (u/v)' = (vu' − uv') / v²
+d/dx (eˣ) = eˣ · d/dx (log x) = 1/x
+∫xⁿ dx = xⁿ⁺¹/(n+1) + C · ∫(1/x) dx = log x + C
+Max/Min: f'(x) = 0 → f'' < 0 max · f'' > 0 min · MC = dC/dx · MR = dR/dx`],
+['Logical reasoning – clock · calendar · direction',`Angle between hands = |30H − 5.5M|
+Odd days: ordinary year 1 · leap year 2 · 100 yrs 5 · 200 yrs 3 · 300 yrs 1 · 400 yrs 0
+Direction: shortest distance = √(x² + y²)`],
+['Statistics – averages & dispersion',`Weighted mean = Σwx / Σw · Mode = 3 Median − 2 Mean
+Median = L + [(N/2 − cf) / f] × h · Mode = L + [(f1 − f0) / (2f1 − f0 − f2)] × h
+Quartile deviation = (Q3 − Q1)/2 · Coefficient = (Q3 − Q1)/(Q3 + Q1)
+SD σ = √[Σx²/n − (x̄)²] · Variance = σ² · CV = σ / x̄ × 100
+If y = a + bx then σy = |b| σx`],
+['Probability · Distributions',`P(A∪B) = P(A) + P(B) − P(A∩B) · P(A|B) = P(A∩B) / P(B) · Independent: P(A∩B) = P(A) P(B)
+E(X) = Σxp · Var(X) = E(X²) − [E(X)]²
+Binomial: P(r) = nCr pʳ q^(n−r) · Mean np · Var npq
+Poisson: P(r) = e^−m mʳ / r! · Mean = Var = m
+Normal: Z = (X − μ)/σ · μ±1σ 68.27% · ±2σ 95.45% · ±3σ 99.73%`],
+['Correlation & Regression',`Pearson r = [nΣxy − ΣxΣy] / √{[nΣx² − (Σx)²][nΣy² − (Σy)²]}
+Spearman r = 1 − 6Σd² / [n(n² − 1)]
+byx = r σy/σx · bxy = r σx/σy · r² = byx × bxy (r has same sign as b)
+Regression lines meet at (x̄, ȳ)`],
+['Index numbers',`Laspeyres = Σp1q0 / Σp0q0 × 100 · Paasche = Σp1q1 / Σp0q1 × 100
+Fisher = √(Laspeyres × Paasche) · Marshall-Edgeworth = Σp1(q0+q1) / Σp0(q0+q1) × 100
+Time reversal: P01 × P10 = 1 · Factor reversal: P01 × Q01 = Σp1q1 / Σp0q0 (Fisher satisfies both)
+Real wage = Money wage / CPI × 100`],
+['Maths shortcuts',`Rule of 72: doubling time ≈ 72 / r %
+Successive change of a% and b% = a + b + ab/100 %
+Same SP, x% gain and x% loss → net loss = x²/100 %
+CI − SI for 2 years = P (r/100)²
+Average speed for equal distances = 2xy / (x + y)`]]},
+{n:'Paper 4 · Business Economics',items:[
+['Elasticity',`Ed = % change in Qd / % change in P
+|Ed| > 1 elastic · = 1 unitary · < 1 inelastic
+Income elasticity > 0 normal · < 0 inferior · > 1 luxury
+Cross elasticity > 0 substitutes · < 0 complements`],
+['Revenue & cost',`TR = P × Q · AR = TR/Q (= Price) · MR = ΔTR/ΔQ
+Shortcut: MR = P (1 − 1/|Ed|) → MR = 0 when |Ed| = 1
+TC = TFC + TVC · AC = AFC + AVC · MC = ΔTC/ΔQ · Profit = TR − TC`],
+['Production & market equilibrium',`AP = TP/L · MP = ΔTP/ΔL · TP maximum when MP = 0
+Profit maximisation: MR = MC, MC cutting MR from below
+Perfect competition: P = AR = MR = MC · Monopoly: P > MR
+Shut down if P < AVC · Break-even when P = AC`],
+['National income',`GDP (expenditure) = C + I + G + (X − M)
+GNP = GDP + Net factor income from abroad · NNP = GNP − Depreciation
+Net indirect taxes = Indirect taxes − Subsidies
+NNP at factor cost (National income) = NNP at market price − Net indirect taxes`],
+['Multiplier & consumption',`MPC + MPS = 1 · APC + APS = 1
+Investment multiplier k = 1 / (1 − MPC) = 1 / MPS
+Money multiplier = 1 / Reserve ratio (CRR)
+Quantity theory: MV = PT`],
+['Public finance – deficits',`Revenue deficit = Revenue expenditure − Revenue receipts
+Fiscal deficit = Total expenditure − (Revenue receipts + Non-debt capital receipts)
+Primary deficit = Fiscal deficit − Interest payments`]]}
+]},
+{id:'G1',name:'Inter · Group 1',note:'Income-tax: Act 1961, AY 2026-27 (Jan 2027 attempt). May 2027 onwards: Income-tax Act 2025 – section numbers maarum. GST: rates as per 22 Sep 2025 change.',subs:[
+{n:'Paper 1 · Advanced Accounting',items:[
+['Goodwill valuation',`Normal profit = Capital employed × Normal rate of return
+Super profit = Average profit − Normal profit
+Goodwill = Super profit × Years' purchase
+Capitalisation: Capitalised value = Average profit × 100 / NRR · Goodwill = Capitalised value − Net assets
+Capitalisation of super profit = Super profit × 100 / NRR`],
+['Reconstitution – admission · retirement · death',`Sacrificing = Old − New · Gaining = New − Old
+Firm's total capital = New partner's capital × Reciprocal of his share
+Hidden goodwill = Firm's total capital − Total adjusted capitals (incl. new partner)
+Death: Share of profit till death = Last year profit × Months/12 × Share`],
+['Dissolution of firm',`Garner v. Murray: insolvent partner's deficiency borne by solvent partners in ratio of their last agreed capitals
+Piecemeal distribution: highest relative capital (Capital / Profit share) method
+Loss on realisation is shared in profit-sharing ratio`],
+['Buy-back of shares',`Max buy-back = 25% of (Paid-up capital + Free reserves) in a year; equity shares 25% of paid-up equity capital
+Board resolution up to 10% · Special resolution up to 25%
+Post buy-back Debt : Equity ≤ 2 : 1
+CRR = Nominal value of shares bought back (out of free reserves / premium)`],
+['Amalgamation – purchase consideration',`Net payment method = Shares + Cash + Securities paid to transferor's shareholders
+Net assets method = Assets taken over − Liabilities taken over
+Pooling of interests: reserves carried forward · Purchase: statutory reserves only`],
+['AS 2 – Inventories',`Value at lower of Cost and Net Realisable Value
+NRV = Estimated selling price − Cost of completion − Selling costs`],
+['AS 3 – Cash Flow Statement',`Net increase in cash = CFO + CFI + CFF
+Indirect method: CFO = Net profit before tax + Non-cash & non-operating items ± Working capital changes − Tax paid`],
+['AS 20 – Earnings per share',`Basic EPS = (Net profit − Preference dividend) / Weighted average equity shares
+TERP = (FV before rights × Shares before + Issue price × Rights shares) / (Shares before + Rights shares)
+Adjustment factor = FV before rights / TERP · Bonus issue adjusted retrospectively`],
+['AS 16 · AS 22',`AS 16: Capitalisation rate = Σ Interest on general borrowings / Σ Weighted avg general borrowings
+Specific borrowing: Actual interest − Income on temporary investment
+AS 22: Deferred tax = Timing difference × Tax rate (DTA only with virtual certainty if losses)`]]},
+{n:'Paper 2 · Corporate & Other Laws',items:[
+['General meetings',`AGM: within 6 months of FY end · gap between two AGMs ≤ 15 months · first AGM within 9 months of FY end
+Notice: 21 clear days · shorter notice – AGM: all members entitled to vote · other GM: 95% of voting power (members holding)
+Quorum S.103: Public – 5 (up to 1,000 members) · 15 (1,001–5,000) · 30 (above 5,000) · Private – 2 present`],
+['Resolutions & Board meetings',`Ordinary: simple majority · Special: votes in favour ≥ 3 × votes against
+Board: min 4 meetings a year · gap ≤ 120 days · Quorum = 1/3 of strength or 2 directors, whichever is higher`],
+['Directors – key numbers',`Min: Public 3 · Private 2 · OPC 1 · Max 15 (more by special resolution)
+Resident director: at least 1, stays 182 days or more in India in the year
+Max directorships: 20 companies (public companies max 10)
+Women director: listed & large public companies · Independent directors: listed public 1/3rd of Board`],
+['Managerial remuneration (S.197)',`Overall ceiling: 11% of net profit
+MD / WTD / Manager: 5% (single) · 10% (all together)
+Other directors: 1% (if MD/manager exists) · 3% (if none)`],
+['Auditor – appointment & tenure (S.139)',`First auditor: Board within 30 days of incorporation (else GM in 90 days)
+Casual vacancy: Board within 30 days · Shareholders' approval within 3 months
+Rotation: Individual 5 yrs (one term) · Firm 2 terms of 5 yrs · Cooling-off 5 years
+Applies to listed companies & specified classes`],
+['Share capital & dividend',`Unpaid dividend: transfer to Unpaid Dividend A/c within 7 days of 30-day period
+Unclaimed for 7 years → IEPF
+Dividend only out of profits; declared in AGM, paid within 30 days`],
+['Interpretation of statutes',`Literal rule · Golden rule · Mischief rule (Heydon)
+Ejusdem generis · Noscitur a sociis · Expressio unius est exclusio alterius`]]},
+{n:'Paper 3 · Taxation – Income-tax',items:[
+['Residential status (Individual)',`Resident if: ≥ 182 days in PY, OR ≥ 60 days in PY and ≥ 365 days in 4 preceding years
+Citizen / PIO visiting India: 60 days → 182 days
+Deemed resident: citizen, India income > ₹15 lakh, not liable to tax elsewhere
+ROR = Resident AND (resident in ≥ 2 of 10 prev. years AND ≥ 730 days in 7 prev. years) else RNOR`],
+['Slab rates – new regime (default)',`FY 2025-26: 0–4L nil · 4–8L 5% · 8–12L 10% · 12–16L 15% · 16–20L 20% · 20–24L 25% · above 24L 30%
+Rebate u/s 87A: income up to ₹12 lakh → up to ₹60,000
+Standard deduction ₹75,000 · Cess 4%`],
+['Slab rates – old regime',`Below 60: 0–2.5L nil · 2.5–5L 5% · 5–10L 20% · above 10L 30%
+Senior (60–80): exemption ₹3L · Super senior (80+): ₹5L
+Rebate u/s 87A: income up to ₹5 lakh → up to ₹12,500 · Standard deduction ₹50,000
+Surcharge: > 50L 10% · > 1Cr 15% · > 2Cr 25% · > 5Cr 37% (new regime capped at 25%)`],
+['HRA exemption (old regime)',`Least of:
+(a) Actual HRA received
+(b) Rent paid − 10% of salary
+(c) 50% of salary (Delhi, Mumbai, Kolkata, Chennai) or 40% (others)
+Salary = Basic + DA (if forming part) + Commission on turnover`],
+['Income from house property',`NAV = Higher of (Municipal value, Fair rent) limited by Standard rent − (Municipal taxes paid)
+Income = NAV − 30% standard deduction − Interest on loan
+Self-occupied: interest deduction max ₹2,00,000`],
+['Deductions – Chapter VI-A (old regime)',`80C + 80CCC + 80CCD(1): ₹1,50,000 · 80CCD(1B): ₹50,000 extra
+80D: ₹25,000 (₹50,000 senior) for self/family + same for parents · 80TTA ₹10,000 · 80TTB ₹50,000 (senior)
+Employer NPS 80CCD(2): 10% of salary (old) · 14% (new regime)`],
+['Capital gains',`Holding period (long-term): listed shares 12 months · unlisted shares & immovable property 24 months
+STCG s.111A (listed equity, STT paid) 20% · LTCG s.112A 12.5% above ₹1.25 lakh · LTCG s.112 12.5% (no indexation)
+Indexed cost = Cost × CII (transfer year) / CII (acquisition year) · CII FY 2025-26 = 376
+s.54EC: up to ₹50 lakh in specified bonds within 6 months`],
+['PGBP – depreciation & presumptive',`Block rates: Residential building 5% · Other building 10% · Furniture 10% · Plant & Machinery 15% · Computers 40% · Intangibles 25%
+44AD: 8% (6% digital) turnover ≤ ₹2 cr (₹3 cr if cash ≤ 5%)
+44ADA: 50% of receipts ≤ ₹50 lakh (₹75 lakh if cash ≤ 5%)
+Tax audit 44AB: business turnover > ₹1 cr (₹10 cr if cash ≤ 5%) · profession > ₹50 lakh`],
+['TDS – common sections',`192 Salary: slab rates · 194A Interest: 10% (₹50,000 banks)
+194C Contractor: 1% individual/HUF · 2% others (₹30,000 single / ₹1 lakh yearly)
+194H Commission: 2% · 194I Rent: 2% P&M · 10% land/building (₹6 lakh yearly)
+194J: 10% professional · 2% technical services (₹50,000) · 194Q: 0.1% above ₹50 lakh · 194IA: 1% (≥ ₹50 lakh)`],
+['Due dates & interest',`ITR: 31 July (non-audit) · 31 Oct (audit) · Belated/revised: 31 Dec
+Advance tax: 15 Jun 15% · 15 Sep 45% · 15 Dec 75% · 15 Mar 100%
+Interest: 234A 1%/month · 234B 1%/month · 234C 1%/month`]]},
+{n:'Paper 3 · Taxation – GST',items:[
+['Supply & value',`Intra-State: CGST + SGST/UTGST · Inter-State: IGST
+Value (S.15) = Transaction value + Other taxes + Incidental expenses − Discounts
+GST rates (from 22 Sep 2025): 5% · 18% · 40% (sin/luxury)`],
+['Time of supply',`Goods: Earliest of invoice date · last date to issue invoice · payment date
+Services: invoice within 30 days (45 for banks/NBFC/insurers) → earlier of invoice or payment; else earlier of service provided or payment
+RCM goods: earliest of receipt · payment · 30 days from invoice date`],
+['Registration & composition',`Threshold: ₹40 lakh goods · ₹20 lakh services (lower in special category states)
+Inter-State supplier of goods: registration compulsory
+Composition: turnover ≤ ₹1.5 cr · 1% manufacturers/traders · 5% restaurants · 6% services (₹50 lakh)`],
+['Input Tax Credit',`S.16: tax invoice · receipt of goods/services · tax paid by supplier · return filed
+Time limit: earlier of 30 Nov after FY end or annual return date
+Set-off: IGST → IGST, CGST, SGST · CGST → CGST, IGST · SGST → SGST, IGST (CGST ↔ SGST never)`],
+['Returns & late fee',`GSTR-1: 11th · GSTR-3B: 20th (monthly) · GSTR-9: 31 Dec
+Late fee: ₹50 per day (₹20 for nil return) · Interest on late tax: 18% p.a. · Excess ITC claimed: 24% p.a.`],
+['E-way bill & e-invoice',`E-way bill: consignment value > ₹50,000 · validity 1 day per 200 km (normal cargo)
+E-invoice: aggregate turnover > ₹5 crore`]]}
+]},
+{id:'G2',name:'Inter · Group 2',note:'Costing · Audit · FM & SM – ICAI latest Study Material / SA-la confirm pannunga.',subs:[
+{n:'Paper 4 · Cost & Management Accounting',items:[
+['Cost sheet',`Prime cost = Direct material + Direct labour + Direct expenses
+Factory cost = Prime cost + Factory overheads (± WIP adjustment)
+Cost of production = Factory cost + Admin overheads (production related)
+Cost of sales = Cost of production ± Finished goods adjustment + Selling & distribution overheads
+Sales = Cost of sales + Profit`],
+['EOQ & stock levels',`EOQ = √(2AO / C) · A annual demand · O order cost · C carrying cost per unit
+Re-order level = Max usage × Max re-order period
+Min level = ROL − (Normal usage × Normal re-order period)
+Max level = ROL + ROQ − (Min usage × Min re-order period)
+Average stock = (Min + Max)/2 · Danger level = Average usage × Min re-order period`],
+['Labour – incentive plans',`Halsey = Time taken × Rate + 50% × Time saved × Rate
+Rowan = Time taken × Rate + (Time saved / Time allowed) × Time taken × Rate
+Taylor: below standard 80% · at/above standard 120% of piece rate
+Merrick: up to 83% normal · 83–100% 110% · above 100% 120%`],
+['Labour turnover',`Separation = Separations / Average workers × 100
+Replacement = Replacements / Average workers × 100
+Flux = (Separations + Accessions) / Average workers × 100`],
+['Overheads & ABC',`OAR = Budgeted overhead / Budgeted base (units / labour hrs / machine hrs)
+Over-absorbed = Absorbed − Actual · Under-absorbed = Actual − Absorbed
+ABC: Cost driver rate = Cost pool / Cost driver volume`],
+['Process costing',`Cost per unit = (Process cost − Scrap value of normal loss) / (Input − Normal loss units)
+Abnormal loss = Units × Cost per unit · Equivalent units = Physical units × % completion
+Joint products: NRV method = Final sales value − Further processing & selling costs`],
+['Job · Batch · Contract costing',`EBQ = √(2DS / C) · D annual demand · S set-up cost · C carrying cost per unit
+Notional profit = Value of work certified − Cost of work certified
+Profit to P&L: below 25% complete nil · 25–50%: ⅓ × Notional profit × Cash received / Work certified · above 50%: ⅔ × same`],
+['Standard costing variances',`Material: Price = AQ (SP − AP) · Usage = SP (SQ − AQ)
+Labour: Rate = AH (SR − AR) · Efficiency = SR (SH − AH) · Idle time = Idle hours × SR
+Fixed OH volume = (Actual output − Budgeted output) × Std rate
+Favourable if actual cost < standard / actual sales > standard`],
+['CVP (Marginal costing)',`Contribution = Sales − Variable cost
+P/V ratio = Contribution / Sales × 100
+BEP units = Fixed cost / Contribution per unit · BEP ₹ = Fixed cost / P/V ratio
+Margin of safety = Actual sales − BEP sales
+Required sales = (Fixed cost + Desired profit) / P/V ratio
+Limiting factor → rank by Contribution per unit of key factor`],
+['Budgets & service costing',`Production units = Sales + Closing FG − Opening FG
+Purchases = Consumption + Closing RM − Opening RM
+Transport: Tonne-km = Tonnes × Km · Absolute tonne-km = Σ (load × distance)`]]},
+{n:'Paper 5 · Auditing & Ethics',items:[
+['Audit risk model',`Audit risk = Risk of material misstatement × Detection risk
+RMM = Inherent risk × Control risk
+Performance materiality < Overall materiality`],
+['Types of audit opinion',`Unmodified: true & fair
+Qualified: material but not pervasive
+Adverse: material and pervasive
+Disclaimer: unable to obtain evidence, material and pervasive`],
+['Auditor – eligibility',`Max 20 company audits per auditor (S.141) · excluded: OPC, dormant, small & private companies with paid-up capital < ₹100 cr
+Disqualified if indebted to the company > ₹5 lakh or guaranteed > ₹1 lakh
+Tenure: Individual 5 yrs · Firm 2 terms of 5 yrs · Cooling-off 5 yrs`],
+['Key Standards on Auditing',`SA 200 objectives · 230 documentation · 240 fraud · 315 risk identification · 320 materiality · 330 responses to risk
+SA 500 evidence · 505 confirmations · 530 sampling · 550 related parties · 560 subsequent events · 570 going concern · 580 representations
+SA 700 / 705 / 706 audit reports · SA 701 Key Audit Matters (listed entities)`]]},
+{n:'Paper 6 · Financial Management',items:[
+['Time value & ratios',`FV = PV (1 + r)ⁿ · PV = FV / (1 + r)ⁿ
+Current ratio = CA / CL · Quick ratio = (CA − Inventory) / CL
+Debtors turnover = Credit sales / Avg debtors · Collection period = 365 / Debtors turnover
+Interest coverage = EBIT / Interest · Debt-equity = Debt / Equity
+ROCE = EBIT / Capital employed × 100 · P/E = MPS / EPS`],
+['Cost of capital',`Kd (irredeemable, post-tax) = I (1 − t) / Net proceeds
+Kd (redeemable) ≈ [I (1 − t) + (RV − NP)/n] / [(RV + NP)/2]
+Ke (dividend growth) = D1 / P0 + g · Ke (CAPM) = Rf + β (Rm − Rf)
+Retained earnings cost = Ke · WACC = Σ (Weight × Cost)`],
+['Leverage & capital structure',`DOL = Contribution / EBIT · DFL = EBIT / EBT · DCL = DOL × DFL = Contribution / EBT
+EBIT-EPS indifference: (EBIT − I1)(1 − t)/E1 = (EBIT − I2)(1 − t)/E2
+MM with tax: V(levered) = V(unlevered) + Tax rate × Debt`],
+['Capital budgeting',`NPV = Σ [Cash flow / (1 + r)ᵗ] − Initial outlay · PI = PV of inflows / Outlay
+IRR = L + [NPV at L / (NPV at L − NPV at H)] × (H − L)
+Payback = Investment / Annual inflow · ARR = Average PAT / Average investment × 100
+Accept if NPV > 0, PI > 1, IRR > cost of capital`],
+['Working capital',`Operating cycle = R + W + F + D − C
+Cash conversion cycle = Inventory days + Debtor days − Creditor days
+Cost of forgoing discount = [d / (100 − d)] × [365 / (Credit period − Discount period)]
+Baumol: Optimal cash = √(2 × Annual cash need × Cost per transaction / Interest rate)`]]},
+{n:'Paper 6 · Strategic Management',items:[
+['Porter\'s Five Forces',`Threat of new entrants · Bargaining power of suppliers · Bargaining power of buyers · Threat of substitutes · Rivalry among existing competitors`],
+['BCG matrix · Ansoff matrix',`BCG: Stars (high growth, high share) · Cash cows (low growth, high share) · Question marks (high growth, low share) · Dogs (low growth, low share)
+Ansoff: Market penetration · Market development · Product development · Diversification`],
+['Generic strategies · Value chain',`Porter generic: Cost leadership · Differentiation · Focus
+Value chain primary: Inbound logistics · Operations · Outbound logistics · Marketing & sales · Service
+Support: Firm infrastructure · HRM · Technology · Procurement`],
+['Corporate strategies · 7S · 5Ps',`Stability · Growth (concentration, integration, diversification) · Retrenchment (turnaround, divestment, liquidation)
+McKinsey 7S: Strategy · Structure · Systems · Shared values · Skills · Style · Staff
+Mintzberg 5Ps: Plan · Ploy · Pattern · Position · Perspective`]]}
+]}
+];
+
+</script>
+<script>
+/* Learner notes (Tanglish) – keyed by formula title. Shown in Learn mode. */
+window.CA_NOTES={
+'Accounting equation & capital':`Business-la irukkura ellaam (Assets) = owner-oda panam (Capital) + veliyila vaangina kadan (Liabilities). Accounting-oda adippadai idhu thaan.`,
+'Depreciation':`Machine/vehicle varusham varusham value kuraiyum. SLM: ellaa varushamum same amount. WDV: kuraindha value-mela same %, so amount kuraindhutte pogum.`,
+'Profit · Markup · Margin':`Markup = cost-mela profit %. Margin = sales-mela profit %. Cost 80, Sales 100 → profit 20: Markup 25%, Margin 20%.`,
+'Bank Reconciliation (BRS)':`Cash book-um pass book-um ore balance kaattaadhu. Cheque pending, bank charges maadhiri kaaranangala add/minus pannaa rendum match aagum.`,
+'Bills of exchange':`Bill-oda due date = ezhudhina naal + term + 3 grace days. Bank-la munnaadiye maathi kaasu vaanginaa, avanga discount kazhippaanga.`,
+'Partnership – ratios, interest, goodwill':`Pudhu partner vandhaa, pazhaiya partners konjam share vittu kodupaanga (sacrifice). Poravanga share-a mathavanga edukkuraanga (gain).`,
+'Incomplete records':`Books illaadhaa, opening-closing capital difference-la profit kandupidikkalaam. Debtors/creditors-ku total account pottu, missing figure-a kandupidi.`,
+'Not-for-profit organisations':`Trust/club-ku "profit" illa, surplus/deficit thaan. Subscription: indha varusham-ku uriyadhu mattum edu (past/future-a remove pannu).`,
+'Company accounts':`Face value-ku mela vaangina extra = securities premium. Bonus shares-ku kaasu varaadhu; reserves-la irundhu share capital-ku maathuvom.`,
+'Valid contract (S.10)':`Agreement + law-ala nadathalaam = contract. Offer, acceptance, consideration, capacity, free consent, lawful object: 6-um irundha thaan valid.`,
+'Breach & remedies (ICA)':`Contract break aanaa nashtam (damages) ketkalaam. Aana romba doorama/ethirpaaraadha nashtam kidaiyaadhu.`,
+'Sale of Goods Act 1930':`Condition = contract-ku mukkiyam (break → cancel panna urimai). Warranty = side promise (break → nashta eedu mattum).`,
+'Partnership Act 1932 · LLP Act 2008':`Partnership-la partners-ku unlimited liability. LLP thaniyaana legal entity, partners-ku limited liability.`,
+'Companies Act 2013 – basics':`Company oru thani aal (legal person). Private: 2–200 members. Public: min 7. OPC: oru member mattum.`,
+'Negotiable Instruments Act 1881':`Cheque bounce (S.138): 30 days-la notice → 15 days time → 1 month-la case. Memory: 30 – 15 – 30.`,
+'Indices & Logarithms':`Same base-a multiply pannaa powers add, divide pannaa subtract. Log-la "multiply → add" thaan main rule.`,
+'Quadratic equation':`x² problem-ku rendu answer varum. D = b²−4ac positive → 2 real answers; zero → 1; negative → real answer illa.`,
+'Mathematics of finance':`SI: ellaa varushamum same interest. CI: interest-mela interest. Annuity: varusham varusham same amount kattuvadhu.`,
+'Permutation · Combination · Sets':`Order mukkiyam na Permutation (nPr). Order mukkiyam illa na Combination (nCr). Memory: P = Position.`,
+'AP · GP · Means':`AP = ore difference-la ēruvadhu (2,5,8). GP = ore ratio-la perukkuvadhu (2,4,8). Always AM ≥ GM ≥ HM.`,
+'Calculus basics':`Differentiation = maatram-oda vegam (slope). Power rule: power-a munnaadi eduthu, power-la 1 kuraichuko.`,
+'Logical reasoning – clock · calendar · direction':`Clock: 1 min = 6°, 1 hr = 30°. Calendar: 7-la mutham aagura "odd days" mattum count pannu.`,
+'Statistics – averages & dispersion':`Mean/Median/Mode = "center". SD = values average-la irundhu evlo chedharudhu. CV = rendu data-va compare panna.`,
+'Probability · Distributions':`Probability = favourable / total. Binomial: fixed attempts, success/fail. Poisson: rare events. Normal: bell curve.`,
+'Correlation & Regression':`r = rendu variables evlo serndhu maarudhu (−1 to +1). Regression = oru variable vachu innonnu predict panradhu.`,
+'Index numbers':`Price/quantity maatrathai oru number-la kaattum. Laspeyres: base-year quantity. Paasche: current-year quantity. Fisher: rendin GM.`,
+'Maths shortcuts':`MCQ-la time save panna: calculation-ku munnaadi indha shortcut irukkaanu paarunga.`,
+'Elasticity':`Price maaruna demand evlo maarum? |Ed| > 1: romba sensitive (luxury). < 1: maaraadhu (salt).`,
+'Revenue & cost':`MR = oru extra unit vittaa varum extra varumaanam. MC = oru extra unit seiyya aagum extra selavu.`,
+'Production & market equilibrium':`Profit max point: MR = MC. Perfect competition-la seller price-a maatha mudiyaadhu (P = MR).`,
+'National income':`GDP = naatukkulla produce aanadhu. GNP = GDP + veliyila irundhu varum income. NNP = GNP − depreciation.`,
+'Multiplier & consumption':`MPC = extra income-la evlo selavu pannuvom. MPC 0.8 na multiplier = 1/0.2 = 5.`,
+'Public finance – deficits':`Revenue deficit: routine selavu > routine varumaanam. Fiscal deficit: arasaangam kadan vaanga vendiya alavu.`,
+'Goodwill valuation':`Goodwill = business-oda "name value". Normal-a vida extra profit (super profit) varudhaa, adhai x years-ku vilai pannuvom.`,
+'Reconstitution – admission · retirement · death':`Partners maarinaa profit ratio maarum. Sacrifice/gain ratio vachu goodwill-a adjust pannuvom.`,
+'Dissolution of firm':`Firm mudiyum bodhu assets-a vitru, kadan adachu, meedhi partners-ku capital-padi kudukkanum.`,
+'Buy-back of shares':`Company thanoda shares-a thirumba vaangum. 25% limit; apram debt:equity 2:1-ku mela pogaadhu.`,
+'Amalgamation – purchase consideration':`PC = vaangura company, vikkira company shareholders-ku kudukkura total (shares + cash).`,
+'AS 2 – Inventories':`Stock-a "cost" vs "NRV" rendula kuraivaanadhula value pannu (conservatism).`,
+'AS 3 – Cash Flow Statement':`Cash evlo vandhudhu, evlo poyiduchu: Operating, Investing, Financing nu 3 pagudhi.`,
+'AS 20 – Earnings per share':`EPS = oru share-ku kidaikkura profit. Bonus/rights vandhaa share count-a adjust pannanum.`,
+'AS 16 · AS 22':`AS 16: asset-ku vaangina kadan interest-a asset cost-la serkkalaam. AS 22: accounting profit-um tax profit-um vera → deferred tax.`,
+'General meetings':`AGM varusham 1 thadava. Notice 21 clear days. Quorum members count-a poruthu maarum.`,
+'Resolutions & Board meetings':`Ordinary = 50%-ku mela. Special = 3:1 (≈75%). Board varushathuku min 4 meetings; 2 meetings gap 120 days-ku mela pogaadhu.`,
+'Directors – key numbers':`Min directors: Public 3, Private 2, OPC 1. Max 15. Oru aal max 20 companies-la director.`,
+'Managerial remuneration (S.197)':`Net profit-la 11% thaan total managerial ceiling. MD/WTD-ku 5% (oruththar) / 10% (ellaarum serthu).`,
+'Auditor – appointment & tenure (S.139)':`Individual auditor 5 varusham; firm-na 2 term (10 yrs); apram 5 varusham gap (cooling-off).`,
+'Share capital & dividend':`Dividend profit-la irundhu mattum; 30 naal-la pay. 7 varusham claim pannaadhadhu IEPF-ku pogum.`,
+'Interpretation of statutes':`Law-a eppadi purinjukkanum: Literal (words-padi), Golden (absurd-na modify), Mischief (problem-a solve panra nokkam).`,
+'Residential status (Individual)':`India-la ethana naal irundhaanga? 182 days → resident; illana 60 days + 4 yrs-la 365 days → resident.`,
+'Slab rates – new regime (default)':`New regime thaan default. ₹12 lakh varai tax illa (rebate). Standard deduction ₹75,000.`,
+'Slab rates – old regime':`Old regime-la deductions (80C, HRA) claim pannalaam, aana slabs-um sinna.`,
+'HRA exemption (old regime)':`3-la kuraivaanadhu thaan exempt: actual HRA, rent − 10% salary, 50%/40% salary.`,
+'Income from house property':`Rent-la irundhu municipal tax kazhichu (NAV), apram 30% flat deduction + loan interest.`,
+'Deductions – Chapter VI-A (old regime)':`Tax save panna investments: 80C ₹1.5L, NPS extra ₹50,000, health insurance 80D.`,
+'Capital gains':`Share/property vitta laabam. Short vs Long term: holding period (12/24 months) thaan mudivu pannum.`,
+'PGBP – depreciation & presumptive':`Books illaama turnover-la 8% (44AD) / 50% (44ADA) profit-a assume pannalaam.`,
+'TDS – common sections':`Payment pannum bodhe tax kazhichu govt-ku kattanum. Section number = payment type.`,
+'Due dates & interest':`Date miss aanaa interest: late filing 234A, advance tax kammi 234B/234C.`,
+'Supply & value':`Same state → CGST + SGST; vera state → IGST. Tax value = price + related charges − discount.`,
+'Time of supply':`GST eppo kattanum? Invoice / payment-la edhu munnaadi nadakkudho, adhu.`,
+'Registration & composition':`Turnover limit thaandinaa registration. Composition = simple scheme, kuraivaana tax, aana ITC illa.`,
+'Input Tax Credit':`Vaangum bodhu kattina GST-a, vikkum bodhu kattura GST-la irundhu kuraikkalaam (credit).`,
+'Returns & late fee':`Monthly: GSTR-1 (sales) 11-aam thethi, GSTR-3B (tax pay) 20-aam thethi.`,
+'E-way bill & e-invoice':`Goods move panna ₹50,000-ku mela e-way bill. ₹5 cr turnover-ku mela e-invoice.`,
+'Cost sheet':`Cost-a padi padiya serkkalaam: Prime → Factory → Production → Sales cost.`,
+'EOQ & stock levels':`EOQ = evlo order pannaa ordering + holding cost kuraivu. ROL = stock evlo irukkum bodhu order pannanum.`,
+'Labour – incentive plans':`Time save pannaa bonus. Halsey: saved time-la 50%. Rowan: ratio-based.`,
+'Labour turnover':`Evlo perr velaiya vittu pogiraanga / serraanga nu alakkum.`,
+'Overheads & ABC':`Overhead-a products-ku pirichu kudukkura rate. ABC = activities-oda adippadaila.`,
+'Process costing':`Continuous production (sugar, chemicals). Loss irundhaa, good units-ku cost-a pirichu kudu.`,
+'Job · Batch · Contract costing':`Job = oru customer order. Batch = oru group. Contract = periya project.`,
+'Standard costing variances':`Standard vs actual difference. Favourable = actual cost kammi.`,
+'CVP (Marginal costing)':`Evlo sell pannaa loss-um illa profit-um illa (BEP)? P/V ratio = ₹1 sales-la evlo contribution.`,
+'Budgets & service costing':`Production = Sales + closing − opening stock. Transport cost-a tonne-km per paakkuvom.`,
+'Audit risk model':`Audit risk = (client-oda error risk) × (auditor adha kandupidikkaama vidura risk).`,
+'Types of audit opinion':`Error evlo periya? Material + pervasive → adverse. Evidence kidaikkala → disclaimer.`,
+'Auditor – eligibility':`Oru auditor max 20 companies. Company-ku ₹5 lakh-ku mela kadan irundha disqualified.`,
+'Key Standards on Auditing':`SA numbers nyabagam vachukko: 200 objectives, 315 risk, 320 materiality, 700 report.`,
+'Time value & ratios':`Inniku ₹100 > naalaikku ₹100. Ratios = business-oda health check.`,
+'Cost of capital':`Funds-ku company kudukkura minimum return. WACC = ellaa sources-oda weighted average.`,
+'Leverage & capital structure':`Fixed cost/interest irundhaa profit swing periya aagum (leverage).`,
+'Capital budgeting':`Project edukkalaamaa? NPV > 0 na accept.`,
+'Working capital':`Daily operations-ku kaasu. Operating cycle = kaasu stock/debtors-la ethana naal maatikkum.`,
+"Porter's Five Forces":`Industry-la pottiyin vali-a 5 forces-la check panra tool.`,
+'BCG matrix · Ansoff matrix':`BCG: product portfolio (Star/Cow/Question/Dog). Ansoff: growth-ku 4 vazhi.`,
+'Generic strategies · Value chain':`Cost-la jeikka, differentiation-la jeikka, illa niche-la. Value chain = value serkkura activities.`,
+'Corporate strategies · 7S · 5Ps':`Stability / Growth / Retrenchment = company-oda 3 periya direction.`
+};
+
+</script>
+<script>
+/* Serndhu Padippom — Focus Sounds. All 12 sounds are generated live with Web Audio
+   (no audio files → no licensing, no download, no loop gaps). One sound at a time.
+   The timer never depends on this file: every call is wrapped so audio errors cannot touch it. */
+(function(){
+'use strict';
+var AC=window.AudioContext||window.webkitAudioContext, ctx=null, master=null, rev=null, rig=null, nz={};
+var P={id:null,vol:.6,mute:false,auto:true,brk:true}, playing=false, want=false, pending=false, err='', gen=0, last=null, resumeAfter=false, subs=[];
+try{ var sv=JSON.parse(localStorage.getItem('stt_amb')); if(sv) for(var k in P) if(sv[k]!==undefined) P[k]=sv[k]; }catch(e){}
+function save(){ try{ localStorage.setItem('stt_amb',JSON.stringify(P)); }catch(e){} }
+function R(a,b){ return a+Math.random()*(b-a); }
+
+/* ---------- audio building blocks ---------- */
+function nb(kind){
+  if(nz[kind]) return nz[kind];
+  var n=ctx.sampleRate*6|0, f=2400, b=ctx.createBuffer(1,n,ctx.sampleRate), d=b.getChannelData(0), i, w, l=0, p0=0,p1=0,p2=0,p3=0,p4=0,p5=0,p6=0, mx=0;
+  for(i=0;i<n;i++){
+    w=Math.random()*2-1;
+    if(kind==='w') d[i]=w;
+    else if(kind==='b'){ l=(l+.02*w)/1.02; d[i]=l; }
+    else { p0=.99886*p0+w*.0555179; p1=.99332*p1+w*.0750759; p2=.969*p2+w*.153852; p3=.8665*p3+w*.3104856; p4=.55*p4+w*.5329522; p5=-.7616*p5-w*.016898; d[i]=p0+p1+p2+p3+p4+p5+p6+w*.5362; p6=w*.115926; }
+  }
+  for(i=0;i<f;i++){ var a=i/f; d[i]=d[i]*a+d[n-f+i]*(1-a); }   // cross-fade → seamless loop
+  for(i=0;i<n-f;i++) mx=Math.max(mx,Math.abs(d[i]));
+  for(i=0;i<n;i++) d[i]=d[i]/mx*.9;
+  b._le=(n-f)/ctx.sampleRate;
+  return (nz[kind]=b);
+}
+function g(v){ var x=ctx.createGain(); x.gain.value=v; return x; }
+function fl(type,fr,q){ var x=ctx.createBiquadFilter(); x.type=type; x.frequency.value=fr; if(q) x.Q.value=q; return x; }
+function chain(){ for(var i=0;i<arguments.length-1;i++) arguments[i].connect(arguments[i+1]); return arguments[arguments.length-1]; }
+function mk(kind,r){ var s=ctx.createBufferSource(); s.buffer=nb(kind); s.loop=true; s.loopEnd=s.buffer._le; s.start(0,R(0,3)); r.n.push(s); return s; }
+function lfo(rate,depth,param,r){ var o=ctx.createOscillator(), a=g(depth); o.frequency.value=rate; o.connect(a); a.connect(param); o.start(); r.n.push(o); }
+function ev(r,a,b,fn){ r.g.push({n:ctx.currentTime+R(a,b),a:a,b:b,f:fn}); }
+function done(s,x){ s.onended=function(){ try{s.disconnect(); x&&x.disconnect();}catch(e){} }; }
+function sw(t,out,f0,f1,dur,vol,type,att){            // soft pitched blip / chirp
+  var o=ctx.createOscillator(), x=g(.0001); o.type=type||'sine'; o.frequency.setValueAtTime(f0,t);
+  if(f1!==f0) o.frequency.exponentialRampToValueAtTime(f1,t+dur);
+  x.gain.setValueAtTime(.0001,t); x.gain.exponentialRampToValueAtTime(vol,t+(att||Math.min(.02,dur/3))); x.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  chain(o,x,out); o.start(t); o.stop(t+dur+.05); done(o,x);
+}
+function burst(t,out,dur,vol,hp,lp){               // soft noise burst, always low-passed
+  var s=ctx.createBufferSource(), x=g(.0001); s.buffer=nb('p');
+  x.gain.setValueAtTime(.0001,t); x.gain.exponentialRampToValueAtTime(vol,t+.006); x.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  chain(s,fl('highpass',hp||600),fl('lowpass',lp||3500),x,out); s.start(t,R(0,4)); s.stop(t+dur+.05); done(s,x);
+}
+function rumble(t,out){
+  var s=ctx.createBufferSource(), x=g(.0001); s.buffer=nb('b'); chain(s,fl('lowpass',130),x,out);
+  x.gain.setValueAtTime(.0001,t); x.gain.linearRampToValueAtTime(.7,t+1.6); x.gain.exponentialRampToValueAtTime(.2,t+4); x.gain.exponentialRampToValueAtTime(.0001,t+9);
+  s.start(t,R(0,3)); s.stop(t+9.2); done(s,x);
+}
+function note(t,m,dur,vol,bus){                    // warm electric-piano-ish note, slightly detuned like tape
+  var fr=440*Math.pow(2,(m-69)/12)*Math.pow(2,R(-8,8)/1200), x=g(.0001), o1=ctx.createOscillator(), o2=ctx.createOscillator(), m2=g(.2);
+  o2.type='triangle'; o1.frequency.value=o2.frequency.value=fr;
+  x.gain.setValueAtTime(.0001,t); x.gain.linearRampToValueAtTime(vol,t+.02); x.gain.exponentialRampToValueAtTime(vol*.4,t+.5); x.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o1.connect(x); o2.connect(m2); m2.connect(x); x.connect(bus);
+  o1.start(t); o2.start(t); o1.stop(t+dur+.05); o2.stop(t+dur+.05); done(o1,x);
+}
+
+/* ---------- the 12 sounds (all low-passed & soft on purpose) ---------- */
+function rain(r){
+  chain(mk('p',r),fl('highpass',250),fl('lowpass',3200),g(.7),r.out);
+  var dg=g(.05); chain(mk('p',r),fl('bandpass',1800,.6),dg,r.out); lfo(.2,.03,dg.gain,r);
+  ev(r,.08,.4,function(t){ burst(t,r.out,R(.03,.07),R(.03,.08),600,2600); });
+}
+function ocean(r){
+  var a=fl('lowpass',700), ag=g(.35); chain(mk('p',r),a,ag,r.out); lfo(.08,.28,ag.gain,r); lfo(.08,250,a.frequency,r);
+  var b=g(.3); chain(mk('b',r),fl('lowpass',350),b,r.out); lfo(.055,.22,b.gain,r);
+  var c=g(.05); chain(mk('p',r),fl('bandpass',1500,.5),c,r.out); lfo(.08,.045,c.gain,r);
+}
+function fire(r){
+  chain(mk('b',r),fl('lowpass',420),g(.9),r.out);
+  chain(mk('p',r),fl('bandpass',700,.5),g(.04),r.out);
+  ev(r,.05,.45,function(t){ burst(t,r.out,R(.01,.05),R(.08,.28),R(900,2200),4800); });
+  ev(r,1,4,function(t){ burst(t,r.out,.1,.25,500,2500); });
+}
+function forest(r){
+  var bp=fl('bandpass',420,.5), wg=g(.35); chain(mk('p',r),bp,wg,r.out); lfo(.06,.15,wg.gain,r); lfo(.045,120,bp.frequency,r);
+  ev(r,2,7,function(t){ var n=2+(Math.random()*3|0), f0=R(1900,3000); for(var i=0;i<n;i++) sw(t+i*.16,r.out,f0*(1+i*.04),f0*R(1.1,1.3),.14,.012,'sine',.04); });
+}
+function cafe(r){
+  [[380,.6,.2,.12],[620,.7,.2,.09],[950,.7,.14,.07]].forEach(function(a){
+    var gg=g(a[2]); chain(mk('p',r),fl('bandpass',a[0],a[1]),gg,r.out); lfo(a[3]*R(.7,1.3),a[2]*.8,gg.gain,r);
+  });
+  chain(mk('b',r),fl('lowpass',250),g(.3),r.out);
+  ev(r,6,14,function(t){ var f0=R(1800,2600); sw(t,r.out,f0,f0,.5,.012,'sine',.01); });
+}
+function storm(r){ rain(r); ev(r,15,35,function(t){ rumble(t,r.out); }); }
+function wind(r){
+  var bp=fl('bandpass',420,.7), wg=g(.55); chain(mk('p',r),bp,wg,r.out); lfo(.09,200,bp.frequency,r); lfo(.06,.3,wg.gain,r);
+  var lg=g(.06); chain(mk('p',r),fl('bandpass',1800,.5),lg,r.out); lfo(.23,.045,lg.gain,r);
+}
+function stream(r){
+  var bp=fl('bandpass',900,.4); chain(mk('p',r),bp,g(.7),r.out); lfo(.25,180,bp.frequency,r);
+  chain(mk('p',r),fl('bandpass',2200,.8),g(.05),r.out);
+  ev(r,.08,.3,function(t){ var f0=R(400,900); sw(t,r.out,f0,f0*1.6,.07,.012,'sine',.02); });
+}
+function night(r){
+  chain(mk('p',r),fl('lowpass',500),g(.2),r.out);
+  [3600,4100].forEach(function(fr,k){
+    var o=ctx.createOscillator(), x=g(0); o.frequency.value=fr; chain(o,x,fl('lowpass',4800),r.out); o.start(); r.n.push(o);
+    ev(r,1.2+k*.5,3.5+k*.8,function(t){ for(var i=0;i<4;i++){ var a=t+i*.09; x.gain.setValueAtTime(0,a); x.gain.linearRampToValueAtTime(.008,a+.03); x.gain.linearRampToValueAtTime(0,a+.07); } });
+  });
+}
+function brown(r){ chain(mk('b',r),fl('lowpass',700),g(1.1),r.out); }
+function white(r){ chain(mk('w',r),fl('lowpass',4500),g(.1),r.out); chain(mk('p',r),g(.35),r.out); }
+function lofi(r){                                   // Dm9 – G13 – Cmaj9 – Am9, 68 bpm, swung, soft drums, tape delay
+  var beat=60/68, i=0, bus=fl('lowpass',1300), mel=g(1), dl=ctx.createDelay(1), fb=g(.32), dlp=fl('lowpass',1500),
+      CH=[[50,57,60,64,65],[43,53,59,64],[48,55,59,62,64],[45,55,59,60,64]], BS=[38,43,36,33], PE=[64,67,69,72,74,76];
+  chain(bus,g(.8),r.out); dl.delayTime.value=beat*.75; chain(mel,dl,dlp,fb,dl); dlp.connect(bus); mel.connect(bus);
+  r.n.push(bus,mel,dl,fb,dlp);
+  chain(mk('p',r),fl('bandpass',3000,.4),g(.008),r.out);                     // tape hiss
+  ev(r,.5,3,function(t){ burst(t,r.out,.012,.025,2000,4000); });             // vinyl crackle
+  r.g.push({n:ctx.currentTime+.15,a:beat/2,b:beat/2,f:function(t){
+    var s=i%8, bar=(i/8|0)%4, c=CH[bar]; if(s%2) t+=beat*.09; i++;
+    if(s===0){ c.forEach(function(m,k){ note(t+k*.035,m,beat*3.6,.045,bus); }); note(t,BS[bar],beat*1.8,.12,bus); }
+    if(s===5) c.slice(1).forEach(function(m,k){ note(t+k*.03,m,beat*1.5,.022,bus); });
+    if(s===3&&bar%2) note(t,BS[bar],beat*1.2,.08,bus);
+    if(s===0||s===4) sw(t,r.out,110,48,.22,.16,'sine',.004);                 // soft kick
+    if(s===2||s===6) burst(t,r.out,.18,.05,1200,3200);                       // soft snare
+    burst(t,r.out,.04,s%2?.006:.01,5000,8000);                               // hat
+    if(s%2===0&&Math.random()<.35) note(t,PE[Math.random()*6|0],beat*1.6,.028,mel);
+  }});
+}
+var SOUNDS=[
+ {id:'rain',e:'🌧️',n:'Rain Drops',d:'Gentle raindrops falling on a window',h:205,v:.9,w:.08,b:rain},
+ {id:'ocean',e:'🌊',n:'Ocean Waves',d:'Peaceful beach waves, soft ocean breeze',h:190,v:.9,w:.1,b:ocean},
+ {id:'fire',e:'🔥',n:'Cozy Fireplace',d:'Warm, crackling fireplace',h:22,v:.9,w:.08,b:fire},
+ {id:'forest',e:'🌲',n:'Forest Ambience',d:'Birds chirping, gentle wind in the trees',h:130,v:.9,w:.3,b:forest},
+ {id:'cafe',e:'☕',n:'Coffee Shop',d:'Soft café chatter and background ambience',h:32,v:.9,w:.18,b:cafe},
+ {id:'storm',e:'⛈️',n:'Rain & Thunder',d:'Rainfall with distant, gentle thunder',h:225,v:.85,w:.12,b:storm},
+ {id:'wind',e:'💨',n:'Wind & Leaves',d:'Soft wind blowing through the leaves',h:100,v:.9,w:.1,b:wind},
+ {id:'stream',e:'💧',n:'Water Stream',d:'A calm, flowing stream',h:200,v:.9,w:.08,b:stream},
+ {id:'night',e:'🌙',n:'Night Ambience',d:'Crickets and a peaceful night',h:250,v:.9,w:.3,b:night},
+ {id:'brown',e:'🎧',n:'Brown Noise',d:'Deep, steady noise for concentration',h:15,v:.6,w:0,b:brown},
+ {id:'white',e:'📻',n:'White Noise',d:'Consistent noise to mask distractions',h:215,v:.55,w:0,b:white},
+ {id:'lofi',e:'🎹',n:'Lo-fi Study Music',d:'Soft instrumental background music',h:285,v:.9,w:.3,b:lofi}
+];
+function def(id){ for(var i=0;i<SOUNDS.length;i++) if(SOUNDS[i].id===id) return SOUNDS[i]; return null; }
+
+/* ---------- engine ---------- */
+function ensure(){
+  if(ctx) return;
+  ctx=new AC(); master=ctx.createGain(); master.gain.value=0;
+  chain(master,fl('lowpass',6500,.4),ctx.destination);                       // warm output, no harsh highs
+  var n=ctx.sampleRate*2.4|0, b=ctx.createBuffer(2,n,ctx.sampleRate);        // generated reverb room
+  for(var c=0;c<2;c++){ var d=b.getChannelData(c), l=0; for(var i=0;i<n;i++){ l=l*.6+(Math.random()*2-1)*.4; d[i]=l*Math.pow(1-i/n,3); } }
+  rev=ctx.createConvolver(); rev.buffer=b; rev.connect(master);
+}
+function build(d){
+  var r={id:d.id,n:[],g:[],out:g(d.v),timer:null}; r.out.connect(master); r.wet=g(d.w||0); r.out.connect(r.wet); r.wet.connect(rev);
+  try{ d.b(r); }catch(e){ kill(r); throw e; }
+  r.timer=setInterval(function(){ fill(r); },200); fill(r); return r;
+}
+function fill(r){
+  if(!ctx) return; var lim=ctx.currentTime+1.6;
+  r.g.forEach(function(q){ var c=0; while(q.n<lim&&c++<80){ q.f(q.n); q.n+=q.a+Math.random()*(q.b-q.a); } });
+}
+function kill(r){
+  if(!r) return; clearInterval(r.timer);
+  r.n.forEach(function(s){ try{s.stop();}catch(e){} try{s.disconnect();}catch(e){} });
+  try{r.out.disconnect();}catch(e){} try{r.wet.disconnect();}catch(e){}
+}
+function level(){ if(!master) return; master.gain.setTargetAtTime((playing&&!P.mute)?P.vol*P.vol:0,ctx.currentTime,.15); }
+function emit(){ var s=snap(); subs.forEach(function(f){ try{f(s);}catch(e){} }); }
+function snap(){ return {id:P.id,def:def(P.id),playing:playing,pending:pending,err:err,vol:P.vol,mute:P.mute,auto:P.auto,brk:P.brk,ok:!!AC}; }
+function needGesture(){ pending=true; playing=false; emit(); }
+
+function play(){
+  if(!AC){ err='Indha browser-la audio support illa'; emit(); return; }
+  if(!P.id) return;
+  err=''; want=true; var tok=++gen;
+  try{
+    ensure();
+    var go=function(){
+      if(tok!==gen||!want) return;
+      try{
+        var d=def(P.id);
+        if(!rig||rig.id!==d.id){ kill(rig); rig=build(d); }
+        pending=false; playing=true; level(); emit();
+      }catch(e){ err='Sound load aagala. Vera sound try pannunga.'; playing=false; want=false; emit(); }
+    };
+    if(ctx.state==='running'){ go(); return; }
+    var p=ctx.resume(); if(p&&p.then) p.then(function(){ if(ctx.state==='running') go(); });
+    setTimeout(function(){ if(tok===gen&&want&&ctx.state!=='running') needGesture(); },350);
+  }catch(e){ err='Audio start aagala'; want=false; emit(); }
+}
+function pause(){
+  want=false; var tok=++gen; playing=false; pending=false; try{ level(); }catch(e){} emit();
+  if(ctx) setTimeout(function(){ if(!want&&tok===gen&&ctx.state==='running') ctx.suspend().catch(function(){}); },700);
+}
+function stop(){
+  want=false; var tok=++gen; playing=false; pending=false; resumeAfter=false; try{ level(); }catch(e){} emit();
+  if(ctx) setTimeout(function(){
+    if(want||tok!==gen) return; kill(rig); rig=null; if(ctx.state==='running') ctx.suspend().catch(function(){});
+  },700);
+}
+function select(id){
+  if(!def(id)) return; P.id=id; err=''; save();
+  if(rig&&rig.id!==id){
+    var old=rig;
+    if(playing&&ctx.state==='running'){            // cross-fade, timer untouched
+      var d=def(id), now=ctx.currentTime;
+      try{
+        rig=build(d); rig.out.gain.setValueAtTime(0,now); rig.out.gain.linearRampToValueAtTime(d.v,now+.8);
+        old.out.gain.setTargetAtTime(0,now,.18); setTimeout(function(){ kill(old); },1100);
+      }catch(e){ rig=old; err='Sound load aagala'; }
+    } else { kill(old); rig=null; }
+  }
+  emit();
+}
+function toggle(){ if(!P.id) select('rain'); if(playing||pending) pause(); else play(); }
+function off(){ stop(); P.id=null; save(); emit(); }
+
+/* timer → sound sync. k: wait | focus | break | paused | done | idle */
+function sync(k){
+  try{
+    if(k===last) return; last=k;
+    if(k==='done'||k==='idle'){ if(playing||want||pending) stop(); return; }
+    if(k==='wait') return;
+    if(k==='paused'||(k==='break'&&!P.brk)){ if(playing||pending){ resumeAfter=true; pause(); } return; }
+    if((P.auto&&P.id)||resumeAfter){ resumeAfter=false; if(!playing) play(); }
+  }catch(e){}
+}
+function onGesture(){ if(want&&pending) play(); }
+document.addEventListener('pointerdown',onGesture,true); document.addEventListener('keydown',onGesture,true);
+
+/* ---------- UI ---------- */
+function h(tag,cls,txt){ var e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e; }
+function eq(){ var e=h('span','amb-eq'); e.appendChild(h('i')); e.appendChild(h('i')); e.appendChild(h('i')); return e; }
+function status(s){
+  if(!s.ok) return 'Audio support illa'; if(s.err) return s.err;
+  if(s.pending) return 'Tap anywhere to start the sound';
+  if(s.playing) return s.mute?'Muted · looping':'Playing · seamless loop';
+  return s.id?'Paused':'Choose a sound below';
+}
+function mountGrid(root){
+  var cards={};
+  SOUNDS.forEach(function(d){
+    var b=h('button','amb-card'); b.type='button'; b.style.setProperty('--h',d.h);
+    b.appendChild(eq()); b.appendChild(h('span','amb-ic',d.e)); b.appendChild(h('span','amb-t',d.n)); b.appendChild(h('span','amb-d',d.d));
+    b.onclick=function(){ if(P.id===d.id) toggle(); else { select(d.id); play(); } };
+    root.appendChild(b); cards[d.id]=b;
+  });
+  subs.push(function(s){ SOUNDS.forEach(function(d){ var c=cards[d.id], on=s.id===d.id; c.classList.toggle('on',on); c.classList.toggle('playing',on&&s.playing); c.setAttribute('aria-pressed',on); }); });
+}
+function mountPlayer(root,withSel){
+  root.textContent=''; root.classList.add('amb-player');
+  var top=h('div','amb-top'), info=h('div','amb-info'), nm=h('b','amb-name'), st=h('small','amb-stat');
+  info.appendChild(nm); info.appendChild(st); top.appendChild(eq()); top.appendChild(info); root.appendChild(top);
+  var ctl=h('div','amb-ctl'), pb=h('button','amb-btn main'), mb=h('button','amb-btn'), vol=h('input','amb-vol'), ob=h('button','amb-btn','✕');
+  pb.type=mb.type=ob.type='button'; pb.setAttribute('aria-label','Play / pause sound'); mb.setAttribute('aria-label','Mute / unmute'); ob.setAttribute('aria-label','Turn sound off'); ob.title='Sound off';
+  vol.type='range'; vol.min=0; vol.max=100; vol.setAttribute('aria-label','Volume');
+  pb.onclick=toggle; mb.onclick=function(){ P.mute=!P.mute; save(); try{level();}catch(e){} emit(); }; ob.onclick=off;
+  vol.oninput=function(){ P.vol=vol.value/100; if(P.mute) P.mute=false; try{level();}catch(e){} emit(); }; vol.onchange=save;
+  ctl.appendChild(pb); ctl.appendChild(mb); ctl.appendChild(vol); ctl.appendChild(ob);
+  var sel=null;
+  if(withSel){
+    sel=h('select','amb-sel'); sel.setAttribute('aria-label','Choose ambient sound');
+    var o0=h('option',null,'🔇 Sound off'); o0.value=''; sel.appendChild(o0);
+    SOUNDS.forEach(function(d){ var o=h('option',null,d.e+' '+d.n); o.value=d.id; sel.appendChild(o); });
+    sel.onchange=function(){ if(!sel.value) off(); else { select(sel.value); play(); } };
+    root.appendChild(sel);
+  }
+  root.appendChild(ctl);
+  var tg=h('div','amb-tg');
+  function tgl(label,key){ var l=h('label'), c=h('input'); c.type='checkbox'; c.onchange=function(){ P[key]=c.checked; save(); emit(); }; l.appendChild(c); l.appendChild(document.createTextNode(label)); tg.appendChild(l); return c; }
+  var ca=tgl('Auto-play with timer','auto'), cb=tgl('Play during breaks','brk'); root.appendChild(tg);
+  subs.push(function(s){
+    nm.textContent=s.def?s.def.e+' '+s.def.n:'No sound selected'; st.textContent=status(s);
+    root.classList.toggle('playing',s.playing); root.classList.toggle('off',!s.ok);
+    pb.textContent=s.playing?'⏸':'▶'; mb.textContent=s.mute?'🔇':'🔊'; mb.setAttribute('aria-pressed',s.mute);
+    if(document.activeElement!==vol) vol.value=Math.round(s.vol*100);
+    if(sel&&document.activeElement!==sel) sel.value=s.id||''; ca.checked=s.auto; cb.checked=s.brk;
+  });
+}
+function mount(){
+  var $=function(i){ return document.getElementById(i); };
+  if($('ambGrid')) mountGrid($('ambGrid'));
+  if($('ambMain')) mountPlayer($('ambMain'),false);
+  if($('ambTimer')) mountPlayer($('ambTimer'),true);
+  emit();
+}
+window.Ambient={sync:sync,sounds:SOUNDS,select:select,play:play,pause:pause,stop:stop,state:snap,_t:{nb:function(k){return nb(k);},ens:ensure,build:build,fill:fill,kill:kill,ctx:function(){return ctx;}}};
+mount();
+})();
+
+</script>
+<script>
+//#region core
+function compute(cfg, tMs){
+  var f=cfg.f*60, b=cfg.b*60, c=cfg.c;
+  var total=c*f+(c-1)*b, cyc=f+b;
+  var e=(tMs-cfg.s*1000)/1000;
+  if(e<0) return {st:'wait',toStart:-e,total:total,key:'wait'};
+  if(e>=total) return {st:'done',total:total,focused:c*f,key:'done'};
+  var k=Math.floor(e/cyc), r=e-k*cyc, inFocus=r<f;
+  var pStart=k*cyc+(inFocus?0:f);
+  var pEnd=inFocus?k*cyc+f:(k+1)*cyc;
+  return {st:inFocus?'focus':'break',idx:k+1,phaseLen:pEnd-pStart,phaseRem:pEnd-e,
+          total:total,rem:total-e,el:e,focused:k*f+Math.min(r,f),key:(inFocus?'f':'b')+(k+1)};
+}
+function encodeCfg(cfg){
+  if(cfg.daily) return 'd'+(cfg.tz+1000)+'.'+cfg.startMin+'.'+cfg.f+'.'+cfg.b+'.'+cfg.c;
+  return Math.floor(cfg.s).toString(36)+'.'+cfg.f+'.'+cfg.b+'.'+cfg.c;
+}
+function effective(cfg,tMs){
+  if(!cfg.daily) return cfg;
+  var DAY=86400000, z=cfg.tz*60000;
+  var day=Math.floor((tMs+z)/DAY);
+  var st=day*DAY+cfg.startMin*60000-z;
+  if(st>tMs) st-=DAY;
+  var total=(cfg.c*cfg.f*60+(cfg.c-1)*cfg.b*60)*1000, s, next=false;
+  if(tMs<st+total+600000) s=st;      // running, or just finished (kept on screen for 10 min)
+  else { s=st+DAY; next=true; }
+  return {s:Math.floor(s/1000),f:cfg.f,b:cfg.b,c:cfg.c,daily:true,next:next};
+}
+function decodeCfg(code){
+  code=(code||'').trim();
+  var d=/^d(\d+)\.(\d+)\.(\d+)\.(\d+)\.(\d+)$/.exec(code);
+  if(d){
+    var q={daily:true,tz:+d[1]-1000,startMin:+d[2],f:+d[3],b:+d[4],c:+d[5]};
+    if(!(q.tz>=-840&&q.tz<=840&&q.startMin>=0&&q.startMin<1440&&q.f>=1&&q.f<=720&&q.b>=0&&q.b<=120&&q.c>=1&&q.c<=20)) return null;
+    if(q.c===1) q.b=0;
+    return q;
+  }
+  var m=/^([0-9a-z]+)\.(\d+)\.(\d+)\.(\d+)$/i.exec((code||'').trim());
+  if(!m) return null;
+  var cfg={s:parseInt(m[1],36),f:+m[2],b:+m[3],c:+m[4]};
+  if(!(cfg.s>1e9&&cfg.s<4e9)) return null;
+  if(!(cfg.f>=1&&cfg.f<=720&&cfg.b>=0&&cfg.b<=120&&cfg.c>=1&&cfg.c<=20)) return null;
+  if(cfg.c===1) cfg.b=0;
+  return cfg;
+}
+function fmt(sec){
+  sec=Math.max(0,Math.ceil(sec-1e-9));
+  var h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60;
+  var p=function(n){return String(n).padStart(2,'0')};
+  return h>0 ? h+':'+p(m)+':'+p(s) : p(m)+':'+p(s);
+}
+function fmtDur(sec){
+  var mins=Math.round(sec/60), h=Math.floor(mins/60), m=mins%60;
+  if(h===0) return m+' min';
+  return h+' h'+(m?' '+String(m).padStart(2,'0')+' min':'');
+}
+function totalSec(cfg){ return cfg.c*cfg.f*60+(cfg.c-1)*cfg.b*60; }
+//#endregion core
+
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var desktopBridge=window.foclyraDesktop||null;
+  var isFloatingWindow=!!(desktopBridge&&desktopBridge.isFloating);
+  if(isFloatingWindow) document.body.classList.add('foclyra-floating');
+  var eff=null, alertsOn=false, soloMode=true;
+  var offset=0, cfg=null, lastKey=null, soundOn=true, actx=null, mini=null, wake=null, mode='count';
+  var tick=null;
+  var now=function(){return Date.now()+offset};
+  var clock=function(ms){return new Date(ms).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})};
+
+  /* ---------- helpers ---------- */
+  function toast(msg){
+    var t=$('toast'); t.textContent=msg; t.classList.add('show');
+    clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove('show')},2200);
+  }
+  function copy(text){
+    var done=function(){toast('Link copy aayiduchu! 📋')};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){fallback()});
+    } else fallback();
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      try{document.execCommand('copy'); done();}catch(e){toast('Link select panni copy pannunga')}
+      document.body.removeChild(ta);
+    }
+  }
+  function store(key,val){ try{ if(val===undefined) return JSON.parse(localStorage.getItem(key)); localStorage.setItem(key,JSON.stringify(val)); }catch(e){ return null; } }
+
+  /* ---------- theme ---------- */
+  function applyTheme(t){
+    document.documentElement.dataset.theme=t;
+    var m=document.querySelector('meta[name=theme-color]'); if(m) m.content=t==='dark'?'#151918':'#F4F1EA';
+  }
+  $('themeBtn').textContent='◐ Theme';
+  $('themeBtn').onclick=function(){
+    var cur=document.documentElement.dataset.theme||'light';
+    var nx=cur==='dark'?'light':'dark';
+    applyTheme(nx); store('stt_theme',nx);
+  };
+
+  /* ---------- motivational quotes (consistency > intensity) ---------- */
+  var QUOTES=[
+    'Daily konjam konjam — adhu dhaan periya vetri.',
+    'Motivation vandhu povum. Habit dhaan nammala kootti pogum.',
+    'Perfect-ah irukka vendaam. Regular-ah irundha podhum.',
+    'Consistency sathham podaadhu. Result dhaan sathama pesum.',
+    'Innaikku 1 hour. Naalaikku 1 hour. Oru maasathula difference theriyum.',
+    'Timer-a start pannunga. Mudivu pathi apram yosikkalaam.',
+    'Mood illanaalum, plan irukku. Adha follow pannunga.',
+    'Innaikku miss aanaa, naalaikku thirumba start. Nillaama thirumba vaanga.',
+    'Kadaisi vara paakkaadheenga. Adutha 25 minutes mattum paarunga.',
+    'Oru pomodoro mudinjaa, goal-ku oru padi nerungiyaachu.',
+    'Phone-a oru ora vechuttu, pen-a eduthukonga. Adhu dhaan first win.',
+    'Ellaa goal-um oru naal-la mudiyaadhu; ellaa naalum konjam pannaa mudiyum.',
+    'Innaikku oru page — adhu dhaan naalaikku motivation.',
+    'Neenga thaniya illa. Ungaloda friends-um ungakooda padikkiraanga.',
+    'Break eduthaa thappu illa. Break mudinjaa thirumba vandhuttaa dhaan strong.',
+    'Chinna chinna steps-um, nitham nadandhaa, thooram kuraiyum.'
+  ];
+  var qi=Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000)%QUOTES.length;
+  function showQuote(){ document.querySelectorAll('.quote-text').forEach(function(el){ el.textContent='\u201C'+QUOTES[qi]+'\u201D'; }); }
+  document.querySelectorAll('.quote-next').forEach(function(b){ b.onclick=function(){ qi=(qi+1)%QUOTES.length; showQuote(); }; });
+  showQuote();
+
+  /* ---------- CA formulas (start page) ---------- */
+  var FM=window.CA_FORMULAS||[], NT=window.CA_NOTES||{}, fLv=null, fSb=0, fMd=store('stt_f_mode')==='revise'?'revise':'learn';
+  function fFind(id){ for(var i=0;i<FM.length;i++) if(FM[i].id===id) return FM[i]; return FM[0]; }
+  function fItem(it){
+    var d=document.createElement('details'), sm=document.createElement('summary'), bd=document.createElement('div');
+    sm.textContent=it[0]; bd.className='fbody'; bd.textContent=it[1]; d.appendChild(sm); d.appendChild(bd);
+    if(fMd==='learn'&&NT[it[0]]){ var n=document.createElement('div'); n.className='fexp'; n.textContent='\uD83D\uDCA1 Simple-ah: '+NT[it[0]]; d.appendChild(n); }
+    if(fMd==='revise') d.open=true; return d;
+  }
+  function fRender(){
+    var L=fFind(fLv), box=$('fList'), q=$('fSearch').value.trim().toLowerCase(), n=0;
+    box.textContent='';
+    document.querySelectorAll('#fLevels .chip').forEach(function(c){ c.classList.toggle('on',c.dataset.l===L.id); });
+    document.querySelectorAll('#fMode button').forEach(function(c){ c.classList.toggle('on',c.dataset.m===fMd); });
+    $('fNote').textContent=L.note; $('fSub').classList.toggle('hidden',!!q);
+    if(q){
+      FM.forEach(function(lv){ lv.subs.forEach(function(sb){
+        var hit=sb.items.filter(function(it){ return (it[0]+' '+it[1]+' '+sb.n).toLowerCase().indexOf(q)>-1; });
+        if(!hit.length) return;
+        var h=document.createElement('div'); h.className='fsub'; h.textContent=(lv.name+' \u00B7 '+sb.n).toUpperCase(); box.appendChild(h);
+        hit.forEach(function(it){ var e=fItem(it); e.open=true; box.appendChild(e); n++; });
+      }); });
+      if(!n){ var e=document.createElement('div'); e.className='fempty'; e.textContent='Match aagala. Vera keyword try pannunga.'; box.appendChild(e); }
+      return;
+    }
+    L.subs[fSb].items.forEach(function(it){ box.appendChild(fItem(it)); });
+  }
+  function fPickLevel(id,keepSub){
+    fLv=id; if(!keepSub) fSb=0; var L=fFind(id), sel=$('fSub'); sel.textContent='';
+    L.subs.forEach(function(sb,i){ var o=document.createElement('option'); o.value=i; o.textContent=sb.n; sel.appendChild(o); });
+    if(fSb>=L.subs.length) fSb=0; sel.value=fSb; fRender();
+  }
+  if(FM.length){
+    var fBox=$('fLevels');
+    FM.forEach(function(lv){
+      var b=document.createElement('button'); b.type='button'; b.className='chip'; b.dataset.l=lv.id; b.textContent=lv.name;
+      b.onclick=function(){ $('fSearch').value=''; store('stt_f_level',lv.id); store('stt_f_sub',0); fPickLevel(lv.id,false); };
+      fBox.appendChild(b);
+    });
+    document.querySelectorAll('#fMode button').forEach(function(b){ b.onclick=function(){ fMd=b.dataset.m; store('stt_f_mode',fMd); fRender(); }; });
+    $('fSub').onchange=function(){ fSb=+this.value; store('stt_f_sub',fSb); fRender(); };
+    $('fSearch').oninput=fRender;
+    var sl=store('stt_f_level'), ss=store('stt_f_sub'); fSb=(typeof ss==='number'&&ss>=0)?ss:0;
+    fPickLevel(FM.some(function(x){return x.id===sl})?sl:FM[0].id,true);
+  } else { $('fList').textContent='Formulas load aagala. Page-a refresh pannunga.'; }
+
+  /* ---------- sound ---------- */
+  document.addEventListener('pointerdown',function(){
+    try{
+      if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
+      if(actx.state==='suspended') actx.resume();
+    }catch(e){}
+  });
+  function chime(kind){
+    if(!soundOn||!actx) return;
+    try{
+      var seq=kind==='break'?[660,880]:kind==='focus'?[880,660]:kind==='done'?[523,659,784,1047]:[784,988];
+      var t0=actx.currentTime;
+      seq.forEach(function(fr,i){
+        var o=actx.createOscillator(), g=actx.createGain(), at=t0+i*0.28;
+        o.type='sine'; o.frequency.value=fr;
+        g.gain.setValueAtTime(0.0001,at);
+        g.gain.exponentialRampToValueAtTime(0.3,at+0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001,at+0.55);
+        o.connect(g); g.connect(actx.destination); o.start(at); o.stop(at+0.6);
+      });
+    }catch(e){}
+    try{ if(navigator.vibrate) navigator.vibrate([150,80,150]); }catch(e){}
+  }
+  $('soundBtn').onclick=function(){
+    soundOn=!soundOn; $('soundBtn').textContent='Sound: '+(soundOn?'on':'off'); store('stt_sound',soundOn);
+  };
+  var sv=store('stt_sound'); if(sv===false){soundOn=false; $('soundBtn').textContent='Sound: off';}
+  $('testSound').onclick=function(){ var was=soundOn; soundOn=true; chime('done'); soundOn=was; };
+
+  /* ---------- focus sounds (synthesised with Web Audio, no files) ---------- */
+  var amb={id:'off',run:null}, ambVol=0.6, nbuf={};
+  function ensureCtx(){ try{ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume(); }catch(e){} return actx; }
+  function nb(type){
+    if(nbuf[type]) return nbuf[type];
+    var n=actx.sampleRate*4, b=actx.createBuffer(1,n,actx.sampleRate), d=b.getChannelData(0), l=0, i, w;
+    for(i=0;i<n;i++){ w=Math.random()*2-1; if(type==='brown'){ l=(l+0.02*w)/1.02; d[i]=l*3.5; } else d[i]=w; }
+    return nbuf[type]=b;
+  }
+  function mk(o,type){ var s=actx.createBufferSource(); s.buffer=nb(type); s.loop=true; s.start(0,Math.random()*3); o.srcs.push(s); return s; }
+  function filt(t,f,q){ var x=actx.createBiquadFilter(); x.type=t; x.frequency.value=f; if(q) x.Q.value=q; return x; }
+  function gn(v){ var g=actx.createGain(); g.gain.value=v; return g; }
+  function lfo(o,rate,depth,param){ var s=actx.createOscillator(), g=gn(depth); s.frequency.value=rate; s.connect(g); g.connect(param); s.start(); o.srcs.push(s); }
+  function burst(dest,f,q,dur,vol){
+    var s=actx.createBufferSource(), b=filt('bandpass',f,q), g=actx.createGain(), t=actx.currentTime;
+    s.buffer=nb('white'); g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    s.connect(b); b.connect(g); g.connect(dest); s.start(t,Math.random()*3,dur+0.05);
+  }
+  var BUILD={
+    white:function(o,m){ mk(o,'white').connect(filt('lowpass',9000)).connect(gn(0.22)).connect(m); },
+    brown:function(o,m){ mk(o,'brown').connect(gn(1.2)).connect(m); },
+    rain:function(o,m){
+      mk(o,'white').connect(filt('highpass',900)).connect(filt('lowpass',8000)).connect(gn(0.28)).connect(m);
+      (function d(){ burst(m,2000+Math.random()*3500,6,0.03,0.12+Math.random()*0.12); o.t=setTimeout(d,30+Math.random()*110); })();
+    },
+    waves:function(o,m){
+      var lp=filt('lowpass',600), g=gn(0.55), h=gn(0.05);
+      mk(o,'brown').connect(lp); lp.connect(g); g.connect(m);
+      mk(o,'white').connect(filt('highpass',2500)).connect(h); h.connect(m);
+      lfo(o,0.1,0.4,g.gain); lfo(o,0.1,350,lp.frequency); lfo(o,0.1,0.045,h.gain);
+    },
+    fire:function(o,m){
+      mk(o,'brown').connect(filt('lowpass',500)).connect(gn(0.7)).connect(m);
+      (function c(){
+        var big=Math.random()<0.12;
+        burst(m,1200+Math.random()*4000,2+Math.random()*4,big?0.05:0.015+Math.random()*0.02,big?0.9:0.2+Math.random()*0.3);
+        o.t=setTimeout(c,40+Math.random()*(big?500:320));
+      })();
+    }
+  };
+  function ambStop(){
+    var a=amb.run; if(!a) return; amb.run=null; clearTimeout(a.t);
+    try{ var t=actx.currentTime; a.m.gain.cancelScheduledValues(t); a.m.gain.setValueAtTime(a.m.gain.value,t); a.m.gain.linearRampToValueAtTime(0,t+0.4); }catch(e){}
+    setTimeout(function(){ a.srcs.forEach(function(x){ try{x.stop()}catch(e){} }); try{a.m.disconnect()}catch(e){} },500);
+  }
+  var AMB_NAME={off:'Off',white:'White noise',brown:'Brown noise',rain:'Rain',waves:'Beach waves',fire:'Fireplace'};
+  function setAmb(id){
+    ambStop();
+    if(id!=='off'&&(!BUILD[id]||!ensureCtx())){ toast('Indha browser-la sound support illa'); id='off'; }
+    amb.id=id;
+    if(id!=='off'){
+      var m=actx.createGain(); m.gain.value=0; m.connect(actx.destination);
+      var o={m:m,srcs:[],t:0}; BUILD[id](o,m); amb.run=o;
+      m.gain.linearRampToValueAtTime(ambVol,actx.currentTime+0.8);
+    }
+    document.querySelectorAll('#ambChips .chip').forEach(function(c){ c.classList.toggle('on',c.dataset.a===id); });
+    $('fx').className='fx'+(id==='off'?'':' '+id);
+    $('ambState').textContent=id==='off'?'Off':'Playing: '+AMB_NAME[id];
+  }
+  document.querySelectorAll('#ambChips .chip').forEach(function(c){ c.onclick=function(){ setAmb(c.dataset.a); }; });
+  var av=store('stt_amb_vol'); if(typeof av==='number'&&av>=0&&av<=1){ ambVol=av; $('ambVol').value=Math.round(av*100); }
+  $('ambVol').oninput=function(){
+    ambVol=this.value/100; store('stt_amb_vol',ambVol);
+    if(amb.run) amb.run.m.gain.setTargetAtTime(ambVol,actx.currentTime,0.05);
+  };
+
+  /* ---------- group session setup ---------- */
+  function setModeChoice(){
+    soloMode=false;
+    $('joinCard').classList.remove('hidden');
+    $('createBtn').innerHTML='Create a Permanent Session Link <span aria-hidden="true">→</span>';
+  }
+
+  /* ---------- create form ---------- */
+  function readForm(){
+    var f,b,c;
+    if(mode==='count'){ f=(+$('h').value||0)*60+(+$('m').value||0); b=0; c=1; }
+    else { f=+$('f').value; b=+$('b').value; c=+$('c').value; }
+    f=Math.round(f); b=Math.round(b); c=Math.round(c);
+    return {f:f,b:b,c:c};
+  }
+  function validate(v){
+    if(!(v.f>=1)) return 'At least 1 minute study time set pannunga.';
+    if(v.f>720) return 'Oru session maximum 12 hours dhaan.';
+    if(mode==='pomo'){
+      if(!(v.b>=1&&v.b<=120)) return 'Break 1 mudhal 120 minutes varaikkum irukkanum.';
+      if(!(v.c>=1&&v.c<=20)) return 'Rounds 1 mudhal 20 varaikkum set pannunga.';
+    }
+    return '';
+  }
+  function clockMin(min){ return new Date(2000,0,1,Math.floor(min/60),min%60).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}); }
+  function dailyMin(){
+    var p=/^(\d{1,2}):(\d{2})$/.exec($('dailyTime').value||'');
+    return p?(+p[1])*60+(+p[2]):-1;
+  }
+  function isDaily(){ return false; }
+  function updateSummary(){
+    var v=readForm(), e=validate(v), s=$('summary');
+    if(e){ s.textContent=''; $('err').textContent=e; return; }
+    $('err').textContent='';
+    var tot=totalSec(v);
+    var txt=mode==='count' ? 'Total duration: '+fmtDur(tot) : v.c+' rounds · '+v.f+' min focus / '+v.b+' min break = '+fmtDur(tot);
+    var startMs=now()+(+$('startIn').value)*60000;
+    s.textContent=txt+' · '+(+$('startIn').value===0?'starts now':'starts in '+$('startIn').value+' minutes')+' · ends around '+clock(startMs+tot*1000);
+  }
+  document.querySelectorAll('#modeSeg button').forEach(function(btn){
+    btn.onclick=function(){
+      mode=btn.dataset.mode;
+      document.querySelectorAll('#modeSeg button').forEach(function(x){x.classList.toggle('on',x===btn)});
+      $('countFields').classList.toggle('hidden',mode!=='count');
+      $('pomoFields').classList.toggle('hidden',mode!=='pomo');
+      updateSummary();
+    };
+  });
+  document.querySelectorAll('#countChips .chip').forEach(function(ch){ ch.onclick=function(){ $('h').value=ch.dataset.h; $('m').value=ch.dataset.m; updateSummary(); }; });
+  document.querySelectorAll('#pomoChips .chip').forEach(function(ch){ ch.onclick=function(){ $('f').value=ch.dataset.f; $('b').value=ch.dataset.b; $('c').value=ch.dataset.c; updateSummary(); }; });
+  ['h','m','f','b','c','startIn'].forEach(function(id){ $(id).addEventListener('input',updateSummary); $(id).addEventListener('change',updateSummary); });
+
+  $('createBtn').onclick=function(){
+    updateSummary();
+    if($('err').textContent) return;
+    var v=readForm(), name=$('name').value.trim(), code;
+    var s=Math.floor((now()+(+$('startIn').value)*60000)/1000);
+    code=encodeCfg({s:s,f:v.f,b:v.b,c:v.c});
+    location.hash='t='+code+(name?'&n='+encodeURIComponent(name):'');
+  };
+
+  /* ---------- join ---------- */
+  function parseJoin(text){
+    text=(text||'').trim();
+    var m=/[#&?]t=([0-9a-z.]+)/i.exec(text), n=/[#&?]n=([^&\s]*)/.exec(text), code=m?m[1]:text;
+    var c=decodeCfg(code);
+    if(!c) return null;
+    var name=''; try{ name=n?decodeURIComponent(n[1]):''; }catch(e){}
+    return {code:code,name:name};
+  }
+  $('joinBtn').onclick=function(){
+    var r=parseJoin($('joinInput').value);
+    if(!r){ $('joinErr').textContent='Indha link/code correct-ah theriyala. Marubadiyum check pannunga.'; return; }
+    $('joinErr').textContent='';
+    location.hash='t='+r.code+(r.name?'&n='+encodeURIComponent(r.name):'');
+  };
+  $('joinInput').addEventListener('keydown',function(e){ if(e.key==='Enter') $('joinBtn').click(); });
+
+  /* ---------- recent ---------- */
+  function addRecent(code,name){
+    var list=store('stt_recent')||[];
+    list=list.filter(function(x){return x.code!==code});
+    list.unshift({code:code,name:name||'',ts:Date.now()});
+    store('stt_recent',list.slice(0,6));
+  }
+  function showRecent(){
+    var list=store('stt_recent')||[], box=$('recentList');
+    box.textContent='';
+    list.forEach(function(it){
+      var c=decodeCfg(it.code); if(!c) return;
+      var row=document.createElement('div'); row.className='recent';
+      var left=document.createElement('div');
+      var a=document.createElement('div'); a.textContent=it.name||'Untitled session';
+      var sm=document.createElement('small');
+      if(c.daily){
+        sm.textContent='Every day at '+clockMin(c.startMin)+' · '+fmtDur(totalSec(c));
+      } else {
+        var end=c.s*1000+totalSec(c)*1000;
+        sm.textContent=new Date(c.s*1000).toLocaleString([], {day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+' · '+fmtDur(totalSec(c))+(end<Date.now()?' · finished':'');
+      }
+      left.appendChild(a); left.appendChild(sm);
+      var b=document.createElement('button'); b.className='btn small'; b.textContent='Open';
+      b.onclick=function(){ location.hash='t='+it.code+(it.name?'&n='+encodeURIComponent(it.name):''); };
+      row.appendChild(left); row.appendChild(b); box.appendChild(row);
+    });
+    $('recentCard').classList.toggle('hidden',!box.children.length);
+  }
+
+  /* ---------- routing ---------- */
+  function parseHash(){
+    var h=location.hash.replace(/^#/,''); if(!h) return null;
+    var p=new URLSearchParams(h), c=decodeCfg(p.get('t')); if(!c) return null;
+    c.name=p.get('n')||''; c.code=p.get('t'); c.solo=p.get('solo')==='1'; return c;
+  }
+  function route(){
+    var c=parseHash();
+    if(!c){
+      cfg=null; stopTicking(); closeMini(); releaseWake();
+      try{ if(window.Ambient) Ambient.sync('idle'); }catch(e){} setAmb('off');
+      $('timerView').classList.add('hidden'); $('createView').classList.remove('hidden');
+      document.title='Serndhu Padippom — Focus & Study Together'; showRecent(); updateSummary(); return;
+    }
+    cfg=c; lastKey=null;
+    addRecent(c.code,c.name);
+    $('createView').classList.add('hidden'); $('timerView').classList.remove('hidden');
+    studyPaused=false; pauseSnapshot=null;
+    $('sname').textContent=c.name||'Serndhu Padippom session';
+    $('invitePanel').classList.remove('hidden');
+    $('stopBtn').classList.remove('hidden');
+    var base=location.href.split('#')[0];
+    var link=base+'#t='+c.code+(c.name?'&n='+encodeURIComponent(c.name):'');
+    $('linkOut').value=link;
+    startTicking(); requestWake();
+  }
+  window.addEventListener('hashchange',route);
+
+  $('newBtn').onclick=function(){ history.pushState('',document.title,location.pathname+location.search); setModeChoice(); route(); };
+  $('copyLink').onclick=function(){ copy($('linkOut').value); };
+  $('copyCode').onclick=function(){ copy(cfg.code); };
+  $('copyMsg').onclick=function(){
+    var tot=totalSec(cfg);
+    var what=(cfg.c===1&&cfg.b===0)?fmtDur(tot)+' countdown':cfg.c+' rounds · '+cfg.f+' min focus / '+cfg.b+' min break';
+    var st=cfg.s*1000>now()?'starts at '+clock(cfg.s*1000):'started at '+clock(cfg.s*1000);
+    copy('Serndhu Padippom 📚 · Study timer'+(cfg.name?' - '+cfg.name:'')+'\n'+what+', '+st+'.\nEllarum ore countdown paakka link open pannunga: '+$('linkOut').value);
+  };
+
+  /* ---------- render loop ---------- */
+  var C=565.49;
+  function view(x){
+    var single=(cfg.c===1&&cfg.b===0), o={};
+    var endTxt=clock(eff.s*1000+x.total*1000);
+    if(x.st==='wait'){
+      var when=new Date(eff.s*1000).toDateString()===new Date(now()).toDateString()?'today':'tomorrow';
+      o.big=fmt(x.toStart);
+      o.label=cfg.daily?'Next session '+when+' at '+clock(eff.s*1000):'Start aagum: '+clock(eff.s*1000);
+      o.p=0;
+      o.sub='Plan: '+fmtDur(x.total)+' · mudiyum time '+endTxt; o.bar=0; o.tab='Start aagum in '+o.big;
+    } else if(x.st==='done'){
+      o.big='00:00'; o.label='Session complete! 🏆'; o.p=1;
+      o.sub='Semma! Neenga '+fmtDur(x.focused)+' focus pannirukkeenga.'+(cfg.daily?' Next session tomorrow at '+clockMin(cfg.startMin)+'.':''); o.bar=1; o.tab='Done';
+    } else if(single){
+      o.big=fmt(x.rem); o.label='Time remaining'; o.p=x.el/x.total; o.bar=o.p;
+      o.sub='Mudiyum time '+endTxt+' · '+fmtDur(x.el)+' complete'; o.tab=o.big+' left';
+    } else {
+      o.big=fmt(x.phaseRem); o.p=x.phaseEl===undefined?(x.phaseLen-x.phaseRem)/x.phaseLen:0;
+      o.p=(x.phaseLen-x.phaseRem)/x.phaseLen;
+      o.label=(x.st==='focus'?'Focus':'Break')+' · round '+x.idx+' of '+cfg.c;
+      o.sub='Session mudiyum: '+endTxt+' · innum '+fmtDur(x.rem)+' irukku'; o.bar=x.el/x.total;
+      o.tab=o.big+' '+(x.st==='focus'?'focus':'break');
+    }
+    return o;
+  }
+  function render(){
+    if(!cfg) return;
+    // The canonical countdown always uses real time. A local pause only freezes
+    // this browser's displayed snapshot; it never adds the pause duration back.
+    var viewTime=now();
+    eff=effective(cfg,viewTime);
+    var x=compute(eff,viewTime), o=view(x);
+    var paused=studyPaused&&x.st!=='done'&&x.st!=='wait'&&!!pauseSnapshot;
+    var displayState=x.st;
+    if(paused){
+      o.big=pauseSnapshot.big;
+      o.label=pauseSnapshot.label;
+      o.p=pauseSnapshot.p;
+      o.bar=pauseSnapshot.bar;
+      o.tab=pauseSnapshot.tab;
+      o.sub='Paused for you 😌 Your break time still counts. Resume will show the current remaining time.';
+      displayState=pauseSnapshot.state;
+      // Do not fire phase-change sounds while this local display is frozen.
+      lastKey=x.key;
+    } else if(x.st==='done'){
+      studyPaused=false; pauseSnapshot=null;
+    }
+    $('stopBtn').textContent=studyPaused?'Resume for me':'Pause for me';
+    $('stopBtn').classList.toggle('hidden',x.st==='done'||x.st==='wait'||!!cfg.solo);
+    $('timerView').dataset.state=displayState;
+    $('soundWarn').classList.toggle('hidden',!soundOn||!!(actx&&actx.state==='running'));
+    $('big').textContent=o.big; $('label').textContent=o.label; $('sub').textContent=o.sub;
+    $('ring').style.strokeDashoffset=String(C*(1-Math.min(1,Math.max(0,o.p))));
+    $('bar').style.width=(Math.min(1,Math.max(0,o.bar))*100)+'%';
+    document.title=(studyPaused?'Paused · ':'')+o.tab+' · Serndhu Padippom';
+    if(!paused && lastKey!==null && x.key!==lastKey){
+      if(x.st==='focus') chime('focus'); else if(x.st==='break') chime('break'); else if(x.st==='done'){ chime('done'); setAmb('off'); }
+      if(x.st!=='wait') notify(o.label,o.sub);
+    }
+    if(!paused) lastKey=x.key;
+    try{ if(window.Ambient) Ambient.sync(paused?'paused':x.st); }catch(e){}
+    updateMini(o,displayState);
+  }
+  var studyPaused=false, pauseSnapshot=null;
+  $('stopBtn').onclick=function(){
+    if(!cfg||!eff) return;
+    if(!studyPaused){
+      // Capture the current visual state, then keep the real countdown running.
+      render();
+      if(!cfg || !eff) return;
+      var current=compute(effective(cfg,now()),now());
+      if(current.st==='done'||current.st==='wait') return;
+      var currentView=view(current);
+      pauseSnapshot={
+        big:$('big').textContent,
+        label:$('label').textContent,
+        p:Math.max(0,Math.min(1,parseFloat(currentView.p)||0)),
+        bar:Math.max(0,Math.min(1,parseFloat(currentView.bar)||0)),
+        tab:currentView.tab,
+        state:current.st
+      };
+      studyPaused=true;
+      toast('Paused for you. Break time still counts; friends keep going.');
+    } else {
+      studyPaused=false;
+      pauseSnapshot=null;
+      toast('Resumed at the current remaining time! 🔥');
+    }
+    render();
+  };
+  function startTicking(){ stopTicking(); render(); tick=setInterval(render,250); }
+  function stopTicking(){ if(tick){clearInterval(tick); tick=null;} }
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden){ render(); requestWake(); } });
+
+  /* ---------- alerts (system notifications when the tab is hidden) ---------- */
+  function alertLabel(){ $('alertBtn').textContent='Alerts: '+(alertsOn?'on':'off'); }
+  try{ alertsOn=store('stt_alerts')===true && 'Notification' in window && Notification.permission==='granted'; }catch(e){}
+  alertLabel();
+  $('alertBtn').onclick=function(){
+    if(!('Notification' in window)){ toast('Indha browser-la alerts support illa'); return; }
+    if(alertsOn){ alertsOn=false; store('stt_alerts',false); alertLabel(); return; }
+    Notification.requestPermission().then(function(p){
+      alertsOn=(p==='granted'); store('stt_alerts',alertsOn); alertLabel();
+      toast(alertsOn?'Alerts on panniyachu':'Browser settings-la notifications allow pannunga');
+    });
+  };
+  function notify(title,body){
+    if(!alertsOn||!document.hidden) return;
+    try{
+      if(navigator.serviceWorker&&navigator.serviceWorker.controller){
+        navigator.serviceWorker.ready.then(function(r){ r.showNotification(title,{body:body,tag:'stt'}); });
+      } else { new Notification(title,{body:body,tag:'stt'}); }
+    }catch(e){}
+  }
+
+  /* ---------- wake lock ---------- */
+  function requestWake(){
+    try{
+      if(cfg && 'wakeLock' in navigator && !document.hidden){
+        navigator.wakeLock.request('screen').then(function(l){wake=l}).catch(function(){});
+      }
+    }catch(e){}
+  }
+  function releaseWake(){ try{ if(wake){wake.release(); wake=null;} }catch(e){} }
+
+  /* ---------- fullscreen ---------- */
+  $('fsBtn').onclick=function(){
+    try{
+      if(document.fullscreenElement){ document.exitFullscreen(); }
+      else { document.documentElement.requestFullscreen().catch(function(){toast('Indha browser-la full screen allow aagala')}); }
+    }catch(e){ toast('Full screen support illa'); }
+  };
+  document.addEventListener('fullscreenchange',function(){
+    document.body.classList.toggle('fs',!!document.fullscreenElement);
+    $('fsBtn').textContent=document.fullscreenElement?'Exit full screen':'Full screen';
+  });
+
+  /* ---------- mini floating window ---------- */
+  var COL={focus:'#86C9AC',break:'#E6B76A',wait:'#8DB9E0',done:'#BBA8E6'};
+  function closeMini(){ try{ if(mini&&mini.win&&!mini.win.closed) mini.win.close(); }catch(e){} mini=null; }
+  function buildMini(w){
+    var d=w.document;
+    d.title='Serndhu Padippom mini timer';
+    var st=d.createElement('style');
+    st.textContent='html,body{margin:0;height:100%;background:#1E2422;color:#F0ECE2;font-family:system-ui,sans-serif}'+
+      'body{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}'+
+      '#t{font-size:52px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}'+
+      '#l{margin-top:8px;font-size:14px;font-weight:600}#s{margin-top:4px;font-size:12px;color:#AAB3AC}';
+    d.head.appendChild(st);
+    var t=d.createElement('div'); t.id='t'; var l=d.createElement('div'); l.id='l'; var s=d.createElement('div'); s.id='s';
+    d.body.appendChild(t); d.body.appendChild(l); d.body.appendChild(s);
+    mini={win:w,t:t,l:l,s:s};
+    w.addEventListener('pagehide',function(){mini=null});
+  }
+  $('miniBtn').onclick=function(){
+    /* Electron uses a native always-on-top window. Browsers use their supported popup fallback. */
+    if(desktopBridge){
+      if(isFloatingWindow){ desktopBridge.closeCurrentWindow(); }
+      else { desktopBridge.openFloatingTimer().catch(function(){toast('Mini timer open aagala. Marubadi try pannunga.');}); }
+      return;
+    }
+    if(mini){ closeMini(); return; }
+    var done=function(w){ if(!w){ toast('Popup block aagiduchu. Browser settings-la allow pannunga.'); return; } buildMini(w); render(); };
+    if('documentPictureInPicture' in window){
+      documentPictureInPicture.requestWindow({width:300,height:240}).then(done).catch(function(){
+        done(window.open('','stt_mini','popup,width=320,height=260'));
+      });
+    } else {
+      done(window.open('','stt_mini','popup,width=320,height=260'));
+    }
+  };
+  function updateMini(o,state){
+    if(!mini) return;
+    try{
+      if(mini.win.closed){mini=null;return;}
+      mini.t.textContent=o.big; mini.l.textContent=o.label; mini.s.textContent=o.sub;
+      mini.t.style.color=COL[state]||'#fff';
+    }catch(e){mini=null;}
+  }
+
+  /* ---------- clock skew (only corrects obviously wrong clocks) ---------- */
+  function syncClock(){
+    try{
+      if(location.protocol==='file:') return;
+      var t0=Date.now();
+      fetch(location.pathname+'?_='+t0,{method:'HEAD',cache:'no-store'}).then(function(r){
+        var d=r.headers.get('date'); if(!d) return;
+        var t1=Date.now(), srv=new Date(d).getTime()+500, local=(t0+t1)/2, diff=srv-local;
+        if(Math.abs(diff)>4000){ offset=diff; toast('Device time adjust panniyachu.'); }
+      }).catch(function(){});
+    }catch(e){}
+  }
+
+  /* ---------- start ---------- */
+  if(location.protocol==='file:') $('fileWarn').classList.remove('hidden');
+  try{ if('serviceWorker' in navigator && location.protocol.indexOf('http')===0) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
+  syncClock();
+  setModeChoice();
+  route();
+  setInterval(function(){ if(!cfg) updateSummary(); },15000);
+})();
+</script>
+</body>
+</html>
